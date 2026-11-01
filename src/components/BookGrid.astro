@@ -1,0 +1,40 @@
+---
+import BookCard from './BookCard.astro';
+
+interface Book {
+  id: string;
+  edition: string;
+  title: string;
+  description: string;
+  issn: string;
+  coverImage: any;
+  pdfUrl: string;
+}
+
+interface Props {
+  books: Book[];
+  title?: string;
+}
+
+const { books, title = "Archives des parutions" } = Astro.props;
+---
+
+<section class="py-12 sm:py-16">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6">
+    <div class="mb-8 pb-3 border-b border-base-300 flex items-baseline justify-between">
+      <h2 class="text-xl sm:text-2xl font-serif font-bold tracking-tight">
+        {title}
+      </h2>
+      <span class="text-xs font-mono opacity-60">
+        {books.length} {books.length > 1 ? 'numéros disponibles' : 'numéro disponible'}
+      </span>
+    </div>
+
+    <!-- Grille de livres -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+      {books.map((book) => (
+        <BookCard book={book} />
+      ))}
+    </div>
+  </div>
+</section>

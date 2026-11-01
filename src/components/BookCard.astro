@@ -1,0 +1,95 @@
+---
+import { Image } from 'astro:assets';
+
+interface Book {
+  id: string;
+  edition: string;
+  title: string;
+  description: string;
+  issn: string;
+  coverImage: any;
+  pdfUrl: string;
+}
+
+interface Props {
+  book: Book;
+}
+
+const { book } = Astro.props;
+const readUrl = `/read?id=${book.id}`;
+---
+
+<article class="journal-card flex flex-col border border-base-300 bg-base-100 rounded-sm overflow-hidden transition-all duration-200">
+  <!-- Image de couverture avec effet 3D au survol -->
+  <div class="p-4 bg-base-200/50 border-b border-base-300">
+    <a 
+      href={readUrl} 
+      target="_blank" 
+      rel="noopener noreferrer" 
+      class="block aspect-[1/1.414] overflow-hidden rounded-sm relative group journal-card-cover border border-neutral-700/60 journal-cover-a4"
+      title={`Ouvrir ${book.edition} dans le lecteur`}
+    >
+      <Image 
+        src={book.coverImage} 
+        alt={`${book.edition} - ${book.title}`} 
+        class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+        width={400}
+        height={565}
+        loading="lazy"
+        decoding="async"
+        format="webp"
+      />
+      <div class="absolute inset-0 bg-neutral-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+        <span class="bg-primary text-primary-content font-black px-3.5 py-2 text-xs uppercase tracking-wider shadow">
+          Ouvrir le PDF →
+        </span>
+      </div>
+    </a>
+  </div>
+
+  <!-- Contenu & Métadonnées -->
+  <div class="p-5 flex-1 flex flex-col justify-between space-y-4">
+    <div class="space-y-2">
+      <div class="flex items-center justify-between text-xs font-mono opacity-70">
+        <span class="font-bold uppercase tracking-wider bg-base-200 px-2 py-0.5 rounded-sm">{book.edition}</span>
+        <span>{book.issn}</span>
+      </div>
+
+      <h3 class="font-serif text-xl font-bold leading-snug">
+        <a href={readUrl} target="_blank" rel="noopener noreferrer" class="hover:underline">
+          {book.title}
+        </a>
+      </h3>
+
+      <p class="text-sm opacity-80 line-clamp-3 leading-relaxed">
+        {book.description}
+      </p>
+    </div>
+
+    <!-- Actions -->
+    <div class="pt-3 border-t border-base-300 flex items-center justify-between gap-2">
+      <a 
+        href={readUrl} 
+        target="_blank" 
+        rel="noopener noreferrer" 
+        class="inline-flex items-center gap-1.5 bg-primary text-primary-content hover:opacity-90 font-bold px-4 py-2 text-xs rounded-sm transition-all shadow-[2px_2px_0px_#0A0A0A] hover:shadow-[4px_4px_0px_#0A0A0A]"
+      >
+        <span>Feuilleter</span>
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+        </svg>
+      </a>
+      <a 
+        href={book.pdfUrl} 
+        download 
+        class="text-xs font-mono opacity-70 hover:opacity-100 hover:underline flex items-center gap-1 py-1 px-2"
+        title="Télécharger le fichier PDF directement"
+      >
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+        </svg>
+        PDF
+      </a>
+    </div>
+  </div>
+</article>

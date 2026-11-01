@@ -1,0 +1,35 @@
+---
+import '../styles/global.css';
+import PdfReader from '../components/PdfReader.astro';
+import { books } from '../data/books.js';
+
+const defaultBook = books[0];
+const defaultCover = defaultBook 
+  ? (typeof defaultBook.coverImage === 'string' ? defaultBook.coverImage : defaultBook.coverImage.src) 
+  : "/covers/cover7.webp";
+---
+
+<!doctype html>
+<html lang="fr" data-theme="cahiers-minimal" class="h-full w-full overflow-hidden">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+    <title>Lecture en ligne — Les Cahiers du Praticien</title>
+    <meta name="description" content="Revue algérienne de médecine pratique" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <!-- Performance: Fonts preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700;900&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..600&family=Titan+One&display=swap" />
+  </head>
+  <body class="h-full w-full bg-neutral-950 overflow-hidden m-0 p-0 text-neutral-100">
+    <PdfReader 
+      pdfUrl={defaultBook?.pdfUrl || "/pdf7.pdf"} 
+      bookTitle={defaultBook ? `${defaultBook.edition} — ${defaultBook.title}` : "Revue médicale"} 
+      coverImage={defaultCover}
+    />
+  </body>
+</html>

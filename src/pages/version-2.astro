@@ -1,0 +1,29 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Masthead from '../components/Masthead.astro';
+import HeroBook from '../components/HeroBook.astro';
+import BookGrid from '../components/BookGrid.astro';
+import Footer from '../components/Footer.astro';
+import { books } from '../data/books.js';
+
+const featuredBook = books[0];
+---
+
+<Layout title="Les Cahiers du Praticien" theme="cahiers-daylight">
+  <div class="daylight-ambient-bg min-h-screen">
+    <!-- En-tête Lumineux Alabaster & Sarcelle avec Logo 3D Extrudé -->
+    <div class="border-b-2 border-primary/20 backdrop-blur-xs">
+      <Masthead themeStyle="daylight" />
+    </div>
+
+    <main>
+      <!-- Hero : Couverture flottante avec halo solaire -->
+      {featuredBook && <HeroBook book={featuredBook} themeStyle="daylight" />}
+
+      <!-- Liste des revues -->
+      <BookGrid books={books} title="Collection des revues cliniques" />
+    </main>
+
+    <Footer class="bg-base-200/80 border-t border-primary/10" />
+  </div>
+</Layout>

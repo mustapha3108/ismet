@@ -1,0 +1,27 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Masthead from '../components/Masthead.astro';
+import HeroBook from '../components/HeroBook.astro';
+import BookGrid from '../components/BookGrid.astro';
+import Footer from '../components/Footer.astro';
+import { books } from '../data/books.js';
+
+const featuredBook = books[0];
+---
+
+<Layout title="Les Cahiers du Praticien" theme="cahiers-minimal">
+  <!-- En-tête avec double filet architectural -->
+  <div class="bg-base-100 border-b-2 border-double border-base-300">
+    <Masthead themeStyle="minimal" />
+  </div>
+
+  <main class="bg-base-100">
+    <!-- Hero : Architecture minimaliste épurée -->
+    {featuredBook && <HeroBook book={featuredBook} themeStyle="minimal" />}
+
+    <!-- Liste des revues -->
+    <BookGrid books={books} title="Tous les numéros parus" />
+  </main>
+
+  <Footer class="bg-base-100 border-t border-base-300" />
+</Layout>

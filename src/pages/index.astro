@@ -1,11 +1,27 @@
 ---
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
+import Masthead from '../components/Masthead.astro';
+import HeroBook from '../components/HeroBook.astro';
+import BookGrid from '../components/BookGrid.astro';
+import Footer from '../components/Footer.astro';
+import { books } from '../data/books.js';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const featuredBook = books[0];
 ---
 
-<Layout>
-	<Welcome />
+<Layout title="Les Cahiers du Praticien" theme="cahiers-swiss">
+  <!-- En-tête Swiss Archival Noir Profond & Jaune -->
+  <div class="bg-neutral text-neutral-content border-b-4 border-primary">
+    <Masthead themeStyle="swiss" />
+  </div>
+
+  <main class="archival-paper-grid">
+    <!-- Hero : Dernier numéro en vedette (index 0) avec couverture 3D physique -->
+    {featuredBook && <HeroBook book={featuredBook} themeStyle="swiss" />}
+
+    <!-- Liste des revues (composant séparé avec boucle) -->
+    <BookGrid books={books} title="Archives des parutions médicales" />
+  </main>
+
+  <Footer class="bg-base-200 border-t-2 border-base-300" />
 </Layout>

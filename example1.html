@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Les Cahiers du Praticien — Revue Algérienne de Médecine Pratique</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Titan One (70s/80s Bulbous Display), Inter (Heavy Grotesk), Newsreader (Editorial Serif) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400&family=Titan+One&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        praticien: {
+                            yellow: '#FAFB00',
+                            yellowAccent: '#FFEE00',
+                            black: '#0A0A0A',
+                            charcoal: '#141414',
+                            paper: '#F7F5F0',
+                            paperDark: '#EAE6DF',
+                            borderDark: '#262626',
+                            borderLight: '#D8D3C8'
+                        }
+                    },
+                    fontFamily: {
+                        display: ['"Titan One"', 'cursive', 'sans-serif'],
+                        sans: ['"Inter"', 'sans-serif'],
+                        serif: ['"Newsreader"', 'Georgia', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Retro Logo Typography Styling */
+        .masthead-title {
+            font-family: 'Titan One', sans-serif;
+            color: #FAFB00;
+            line-height: 0.88;
+            letter-spacing: -0.02em;
+            text-shadow: 
+                3px 3px 0px #000000,
+                -1px -1px 0px #000000,  
+                1px -1px 0px #000000,
+                -1px 1px 0px #000000,
+                1px 1px 0px #000000,
+                0px 6px 20px rgba(250, 251, 0, 0.12);
+        }
+
+        .masthead-mini {
+            font-family: 'Titan One', sans-serif;
+            color: #FAFB00;
+            line-height: 0.92;
+            letter-spacing: -0.01em;
+            text-shadow: 1.5px 1.5px 0px #000000;
+        }
+
+        /* 3D Magazine Cover Stack Effect for Hero */
+        .magazine-3d-wrapper {
+            perspective: 1200px;
+        }
+
+        .magazine-3d-cover {
+            transform: rotateY(-14deg) rotateX(4deg);
+            transform-style: preserve-3d;
+            transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.5s ease;
+            box-shadow: 
+                -15px 25px 35px rgba(0, 0, 0, 0.7),
+                /* Simulated paper pages on right edge */
+                4px 1px 0px #e5e5e0,
+                5px 1px 0px #1a1a1a,
+                8px 2px 0px #dcdcd6,
+                9px 2px 0px #1a1a1a,
+                12px 3px 0px #d2d2cc,
+                13px 3px 0px #1a1a1a,
+                16px 4px 0px #c8c8c2,
+                17px 4px 0px rgba(0,0,0,0.8);
+        }
+
+        .magazine-3d-wrapper:hover .magazine-3d-cover {
+            transform: rotateY(-4deg) rotateX(1deg) translateY(-6px);
+            box-shadow: 
+                -20px 30px 45px rgba(250, 251, 0, 0.12),
+                4px 1px 0px #e5e5e0,
+                8px 2px 0px #dcdcd6,
+                12px 3px 0px #d2d2cc,
+                16px 4px 0px #c8c8c2;
+        }
+
+        /* Spine highlight on 3D cover */
+        .magazine-spine-crease {
+            background: linear-gradient(90deg, 
+                rgba(255,255,255,0.25) 0%, 
+                rgba(0,0,0,0.45) 3%, 
+                rgba(255,255,255,0.15) 6%, 
+                transparent 12%);
+        }
+
+        /* Swiss Archival Card Hover */
+        .journal-card-cover {
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 4px 12px rgba(10, 10, 10, 0.08);
+        }
+
+        .journal-card:hover .journal-card-cover {
+            transform: translate(-4px, -4px);
+            box-shadow: 
+                3px 3px 0px #EAE6DF,
+                4px 4px 0px #0A0A0A,
+                8px 8px 0px #0A0A0A;
+        }
+
+        /* Flipbook Center Spine Shadow */
+        .book-spine-left {
+            background: linear-gradient(90deg, transparent 85%, rgba(0,0,0,0.06) 95%, rgba(0,0,0,0.22) 100%);
+        }
+        .book-spine-right {
+            background: linear-gradient(270deg, transparent 85%, rgba(0,0,0,0.05) 95%, rgba(0,0,0,0.18) 100%);
+        }
+
+        /* Subtle grain texture overlay */
+        .paper-texture {
+            background-image: radial-gradient(rgba(10, 10, 10, 0.055) 1px, transparent 0);
+            background-size: 24px 24px;
+        }
+    </style>
+</head>
+<body class="bg-praticien-paper text-praticien-black font-sans antialiased selection:bg-praticien-yellow selection:text-praticien-black">
+
+    <!-- ==========================================
+         1. TOP EDITORIAL UTILITY BAR
+    =========================================== -->
+    <header class="bg-praticien-black text-neutral-300 border-b border-praticien-borderDark sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-12 flex items-center justify-between text-xs tracking-wide">
+            <!-- Left: Publication Metadata -->
+            <div class="flex items-center space-x-3 sm:space-x-4">
+                <span class="inline-flex items-center px-2 py-0.5 rounded bg-praticien-yellow text-praticien-black font-black tracking-tight text-[11px]">
+                    ISSN 1112-845X
+                </span>
+                <span class="hidden md:inline-block text-neutral-400 font-medium">
+                    Archives Médicales Algériennes • Fondée en 1982
+                </span>
+                <span class="hidden lg:inline-block text-neutral-600">|</span>
+                <span class="hidden lg:inline-block text-neutral-400">
+                    Accès Libre Praticiens & CHU
+                </span>
+            </div>
+
+            <!-- Right: Quick Navigation Links -->
+            <nav class="flex items-center space-x-4 sm:space-x-6 font-semibold">
+                <a href="#archives" class="hover:text-praticien-yellow transition-colors">Numéros</a>
+                <a href="#filtres" class="hover:text-praticien-yellow transition-colors">Spécialités</a>
+                <a href="#comite" class="hidden sm:inline-block hover:text-praticien-yellow transition-colors">Comité de Rédaction</a>
+                <button onclick="showToast('Formulaire de soumission manuscrit : ouverture prochainement (contact@cahiersdupraticien.dz)')" class="inline-flex items-center gap-1.5 text-praticien-yellow hover:underline">
+                    <span>Soumettre un article</span>
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- ==========================================
+         2. HERO SECTION (SWISS GRID + VINTAGE MASTHEAD)
+    =========================================== -->
+    <section class="bg-praticien-black text-white relative overflow-hidden border-b-4 border-praticien-yellow">
+        <!-- Subtle Swiss Grid Background Lines -->
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <!-- 2A. MASSIVE PRINT MASTHEAD BANNER -->
+            <div class="py-8 sm:py-12 md:py-14 border-b border-praticien-borderDark text-center relative">
+                <!-- Top Vintage Issue Strip -->
+                <div class="flex flex-wrap items-center justify-between text-[11px] uppercase tracking-widest text-neutral-400 font-bold mb-6 pb-3 border-b border-neutral-800/80">
+                    <span>ÉDITION SCIENTIFIQUE & CLINIQUE • ALGER</span>
+                    <span class="text-praticien-yellow">FORMATION MÉDICALE CONTINUE</span>
+                    <span>TRIMESTRIEL • N° ARCHIVE DIGITALISÉE</span>
+                </div>
+
+                <!-- Iconic Bulbous 70s/80s Display Logo Reproduction -->
+                <div class="inline-block mx-auto px-2 sm:px-6">
+                    <h1 class="masthead-title text-5xl sm:text-7xl md:text-8xl lg:text-[6.4rem] uppercase select-none">
+                        <span class="block">LES CAHIERS</span>
+                        <span class="block mt-1 sm:mt-0">DU PRATICIEN</span>
+                    </h1>
+                    <!-- Heavy Grotesk Lowercase Subtitle -->
+                    <div class="mt-4 sm:mt-5 bg-praticien-yellow text-praticien-black px-4 py-1.5 sm:py-2 rounded-sm inline-block shadow-lg">
+                        <p class="font-sans font-black text-sm sm:text-xl md:text-2xl tracking-tight lowercase leading-none">
+                            revue algérienne de médecine pratique
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2B. SPLIT ASYMMETRIC SHOWCASE (LATEST ISSUE SPOTLIGHT) -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 py-10 sm:py-14 items-center">
+                
+                <!-- Left Column (60% / 7 cols): Featured Issue Metadata & CTAs -->
+                <div class="lg:col-span-7 space-y-6 lg:pr-6">
+                    <!-- Issue Status & Volume Badge -->
+                    <div class="flex flex-wrap items-center gap-3">
+                        <span class="inline-flex items-center gap-2 bg-praticien-yellow text-praticien-black text-xs font-black uppercase px-3 py-1.5 rounded-sm tracking-wider">
+                            <span class="w-2 h-2 rounded-full bg-praticien-black animate-pulse"></span>
+                            DERNIER NUMÉRO PARU
+                        </span>
+                        <span class="text-sm font-bold text-neutral-300 tracking-wide border border-neutral-700 px-3 py-1 rounded-sm">
+                            Volume 12 • Numéro 3 • Septembre 2024
+                        </span>
+                    </div>
+
+                    <!-- Specialty Pills -->
+                    <div class="flex flex-wrap gap-2">
+                        <span class="text-xs font-semibold uppercase tracking-wider bg-neutral-900 text-praticien-yellow border border-neutral-700 px-3 py-1 rounded-full">
+                            Cardiologie
+                        </span>
+                        <span class="text-xs font-semibold uppercase tracking-wider bg-neutral-900 text-neutral-200 border border-neutral-800 px-3 py-1 rounded-full">
+                            Médecine Générale
+                        </span>
+                        <span class="text-xs font-semibold uppercase tracking-wider bg-neutral-900 text-neutral-200 border border-neutral-800 px-3 py-1 rounded-full">
+                            Thérapeutique Pratique
+                        </span>
+                    </div>
+
+                    <!-- Featured Dossier Headline -->
+                    <div class="space-y-3">
+                        <p class="text-xs font-bold uppercase tracking-widest text-neutral-400">
+                            DOSSIER CENTRAL DU NUMÉRO :
+                        </p>
+                        <h2 class="font-serif text-2xl sm:text-4xl lg:text-[2.6rem] font-semibold text-white leading-[1.15]">
+                            Prise en charge de l’hypertension artérielle résistante & nouvelles recommandations cliniques au cabinet
+                        </h2>
+                    </div>
+
+                    <!-- Abstract / Summary -->
+                    <p class="text-neutral-300 text-base sm:text-lg leading-relaxed font-normal">
+                        Algorithmes décisionnels adaptés à la pratique ambulatoire, stratégies de bithérapie fixe précoce, dépistage des causes secondaires et suivi néphro-protecteur chez le patient polymorbide.
+                    </p>
+
+                    <!-- Lead Authors & Editorial Board -->
+                    <div class="pt-2 border-t border-neutral-800/90 flex flex-wrap items-center gap-y-2 gap-x-6 text-sm text-neutral-300">
+                        <div>
+                            <span class="text-neutral-500 font-medium">Coordination :</span>
+                            <strong class="text-white font-semibold ml-1">Pr. K. Mansouri</strong> (CHU Mustapha Pacha)
+                        </div>
+                        <div>
+                            <span class="text-neutral-500 font-medium">Rédaction :</span>
+                            <strong class="text-white font-semibold ml-1">Dr. A. Benali, Dr. S. Meziani</strong>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="pt-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+                        <button onclick="openReaderModal(0)" class="inline-flex items-center justify-center gap-3 bg-praticien-yellow hover:bg-yellow-300 text-praticien-black font-black text-base px-7 py-4 rounded-sm transition-all transform active:scale-[0.99] shadow-[4px_4px_0px_#ffffff30]">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                            </svg>
+                            <span>Feuilleter la revue (Lecteur 2 pages)</span>
+                        </button>
+
+                        <button onclick="triggerPdfDownload('cahiers-du-praticien-vol12-no3.pdf', '4.2 Mo')" class="inline-flex items-center justify-center gap-2.5 bg-transparent hover:bg-neutral-900 text-white border-2 border-neutral-700 hover:border-praticien-yellow font-bold text-sm px-6 py-4 rounded-sm transition-colors">
+                            <svg class="w-5 h-5 text-praticien-yellow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                            </svg>
+                            <span>Télécharger PDF (4.2 Mo)</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Right Column (40% / 5 cols): 3D Interactive Physical Magazine Cover -->
+                <div class="lg:col-span-5 flex flex-col items-center justify-center">
+                    <div onclick="openReaderModal(0)" class="magazine-3d-wrapper cursor-pointer group relative w-72 sm:w-80">
+                        
+                        <!-- Floating "Click to Flip" Badge -->
+                        <div class="absolute -top-4 -left-4 z-20 bg-praticien-yellow text-praticien-black font-black text-xs uppercase px-3 py-1.5 rounded-sm shadow-lg border-2 border-praticien-black flex items-center gap-1.5 group-hover:scale-105 transition-transform">
+                            <span>Aperçu Interactif</span>
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                        </div>
+
+                        <!-- A4 Proportioned Cover Container -->
+                        <div class="magazine-3d-cover aspect-[1/1.414] w-full bg-praticien-black border-2 border-neutral-700 rounded-r-sm overflow-hidden flex flex-col justify-between relative">
+                            <!-- Left Spine Crease Overlay -->
+                            <div class="magazine-spine-crease absolute inset-0 z-10 pointer-events-none"></div>
+
+                            <!-- Cover Header (Mini Masthead) -->
+                            <div class="bg-praticien-black p-4 border-b-2 border-praticien-yellow text-center relative z-0">
+                                <div class="flex justify-between text-[9px] text-neutral-400 font-bold uppercase mb-1">
+                                    <span>VOL. 12 • N° 3</span>
+                                    <span>SEPTEMBRE 2024</span>
+                                </div>
+                                <div class="masthead-mini text-2xl tracking-tight uppercase">
+                                    LES CAHIERS<br>DU PRATICIEN
+                                </div>
+                                <div class="text-[9px] font-sans font-black lowercase text-white bg-neutral-900 mt-1 py-0.5 px-2 inline-block rounded-sm">
+                                    revue algérienne de médecine pratique
+                                </div>
+                            </div>
+
+                            <!-- Cover Clinical Photo -->
+                            <div class="relative flex-grow overflow-hidden bg-neutral-900">
+                                <img 
+                                    src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=900&q=85" 
+                                    alt="Consultation cardiologie et stéthoscope"
+                                    onerror="this.src='https://placehold.co/600x800/141414/FAFB00?text=Vol+12+No+3'"
+                                    class="w-full h-full object-cover object-center contrast-110 brightness-90 group-hover:scale-105 transition-transform duration-500"
+                                >
+                                <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
+                                
+                                <!-- Cover Headlines Overlay -->
+                                <div class="absolute bottom-0 inset-x-0 p-4 text-left space-y-1.5">
+                                    <span class="inline-block bg-praticien-yellow text-praticien-black text-[10px] font-black uppercase px-2 py-0.5">
+                                        DOSSIER CARDIOLOGIE
+                                    </span>
+                                    <h3 class="font-serif text-white font-bold text-lg leading-snug">
+                                        Hypertension Artérielle Résistante : Algorithmes 2024
+                                    </h3>
+                                    <p class="text-[11px] text-neutral-300 font-medium line-clamp-2">
+                                        • Urgences hypertensives au cabinet<br>
+                                        • Fiche pratique : Bithérapies fixes
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Cover Footer Bar -->
+                            <div class="bg-praticien-yellow text-praticien-black px-4 py-1.5 flex items-center justify-between text-[10px] font-black uppercase">
+                                <span>ISSN 1112-845X</span>
+                                <span>48 PAGES • CAHIER FMC</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="mt-5 text-xs text-neutral-400 font-medium flex items-center gap-1.5">
+                        <svg class="w-4 h-4 text-praticien-yellow" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"/></svg>
+                        <span>Cliquez sur la couverture pour ouvrir la liseuse</span>
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================
+         3. QUICK-FILTER & SEARCH BRIDGE BAR
+    =========================================== -->
+    <section id="filtres" class="relative z-20 -mt-6 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div class="bg-white border-2 border-praticien-black shadow-[6px_6px_0px_#0A0A0A] rounded-sm p-4 sm:p-6">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-center">
+                
+                <!-- Search Input -->
+                <div class="lg:col-span-5 relative">
+                    <label for="search-input" class="sr-only">Rechercher dans les archives</label>
+                    <svg class="w-5 h-5 text-neutral-500 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                    <input 
+                        id="search-input"
+                        type="text" 
+                        placeholder="Rechercher un article, auteur, pathologie, mot-clé..." 
+                        class="w-full pl-11 pr-4 py-2.5 bg-praticien-paper border border-neutral-300 focus:border-praticien-black focus:outline-none text-sm font-medium rounded-sm text-praticien-black placeholder-neutral-500"
+                    >
+                </div>
+
+                <!-- Specialty Filter Pills -->
+                <div class="lg:col-span-5 flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0" id="specialty-filters">
+                    <button data-specialty="all" class="specialty-btn active shrink-0 px-3 py-1.5 text-xs font-black uppercase rounded-sm bg-praticien-black text-praticien-yellow border border-praticien-black transition-colors">
+                        Toutes (6)
+                    </button>
+                    <button data-specialty="Cardiologie" class="specialty-btn shrink-0 px-3 py-1.5 text-xs font-bold uppercase rounded-sm bg-praticien-paper hover:bg-praticien-yellow/40 text-praticien-black border border-neutral-300 transition-colors">
+                        Cardiologie
+                    </button>
+                    <button data-specialty="Médecine Générale" class="specialty-btn shrink-0 px-3 py-1.5 text-xs font-bold uppercase rounded-sm bg-praticien-paper hover:bg-praticien-yellow/40 text-praticien-black border border-neutral-300 transition-colors">
+                        Médecine Générale
+                    </button>
+                    <button data-specialty="Pédiatrie" class="specialty-btn shrink-0 px-3 py-1.5 text-xs font-bold uppercase rounded-sm bg-praticien-paper hover:bg-praticien-yellow/40 text-praticien-black border border-neutral-300 transition-colors">
+                        Pédiatrie
+                    </button>
+                    <button data-specialty="Endocrinologie" class="specialty-btn shrink-0 px-3 py-1.5 text-xs font-bold uppercase rounded-sm bg-praticien-paper hover:bg-praticien-yellow/40 text-praticien-black border border-neutral-300 transition-colors">
+                        Endocrinologie
+                    </button>
+                    <button data-specialty="Pneumologie" class="specialty-btn shrink-0 px-3 py-1.5 text-xs font-bold uppercase rounded-sm bg-praticien-paper hover:bg-praticien-yellow/40 text-praticien-black border border-neutral-300 transition-colors">
+                        Pneumologie
+                    </button>
+                </div>
+
+                <!-- Year Dropdown -->
+                <div class="lg:col-span-2">
+                    <label for="year-select" class="sr-only">Filtrer par année</label>
+                    <select id="year-select" class="w-full py-2.5 px-3 bg-praticien-paper border border-neutral-300 focus:border-praticien-black focus:outline-none text-xs font-bold uppercase tracking-wider rounded-sm text-praticien-black cursor-pointer">
+                        <option value="all">Toutes années</option>
+                        <option value="2024">Année 2024</option>
+                        <option value="2023">Année 2023</option>
+                        <option value="2022">Année 2022</option>
+                    </select>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================
+         4. ARCHIVE BOOKSHELF GRID (WARM PAPER #F7F5F0)
+    =========================================== -->
+    <main id="archives" class="paper-texture py-14 sm:py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <!-- Section Header -->
+            <div class="flex flex-col sm:flex-row sm:items-end justify-between pb-6 mb-10 border-b-2 border-praticien-black gap-4">
+                <div>
+                    <div class="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-neutral-600 mb-1">
+                        <span class="w-2.5 h-2.5 bg-praticien-yellow border border-praticien-black inline-block"></span>
+                        <span>COLLECTION NUMÉRISÉE INTÉGRALE</span>
+                    </div>
+                    <h2 class="font-serif text-3xl sm:text-4xl font-bold text-praticien-black tracking-tight">
+                        Archives & Numéros Parus
+                    </h2>
+                </div>
+                <div class="flex items-center gap-3">
+                    <span id="results-counter" class="text-xs font-bold uppercase tracking-wider bg-praticien-paperDark border border-praticien-black px-3 py-1.5 rounded-sm">
+                        6 Numéros affichés
+                    </span>
+                </div>
+            </div>
+
+            <!-- Dynamic Journal Issues Grid (Populated via JS for clean filtering & reader modal connection) -->
+            <div id="journals-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
+                <!-- Cards rendered by script below -->
+            </div>
+
+            <!-- Empty State when no filter matches -->
+            <div id="empty-state" class="hidden text-center py-16 bg-white border-2 border-dashed border-neutral-400 rounded-sm my-6">
+                <p class="font-serif text-2xl font-semibold text-praticien-black mb-2">Aucun numéro ne correspond à votre recherche</p>
+                <p class="text-sm text-neutral-600 mb-4">Essayez de modifier vos filtres de spécialité ou d'année.</p>
+                <button onclick="resetFilters()" class="px-4 py-2 bg-praticien-black text-praticien-yellow text-xs font-black uppercase rounded-sm">
+                    Réinitialiser les filtres
+                </button>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- ==========================================
+         5. EDITORIAL COMMITTEE & SUBMISSION BANNER
+    =========================================== -->
+    <section id="comite" class="bg-praticien-paperDark border-t-2 border-praticien-black py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-praticien-black text-white p-6 sm:p-10 rounded-sm border-2 border-praticien-black shadow-[8px_8px_0px_#FAFB00] grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                <div class="lg:col-span-8 space-y-3">
+                    <span class="text-xs font-black uppercase tracking-widest text-praticien-yellow">
+                        COMITÉ SCIENTIFIQUE & LECTURE PAR LES PAIRS
+                    </span>
+                    <h3 class="font-serif text-2xl sm:text-3xl font-bold text-white">
+                        Vous souhaitez publier un cas clinique ou une mise au point thérapeutique ?
+                    </h3>
+                    <p class="text-neutral-300 text-sm sm:text-base leading-relaxed">
+                        <em>Les Cahiers du Praticien</em> publient des articles didactiques rédigés par des hospitalo-universitaires et praticiens algériens. Chaque numéro est archivé en format PDF haute définition avec lecture interactive.
+                    </p>
+                </div>
+                <div class="lg:col-span-4 flex flex-col sm:flex-row lg:flex-col gap-3 justify-end">
+                    <button onclick="showToast('Guide aux auteurs téléchargé (Recommandations_Auteurs_CDP.pdf)')" class="w-full py-3.5 px-5 bg-praticien-yellow text-praticien-black font-black text-xs uppercase tracking-wider rounded-sm hover:bg-yellow-300 transition-colors text-center">
+                        Télécharger les recommandations aux auteurs
+                    </button>
+                    <button onclick="showToast('Comité de Rédaction : Pr. K. Mansouri (Rédacteur en chef), Pr. M. Belkacem, Dr. A. Benali, Pr. N. Ouali.')" class="w-full py-3 px-5 bg-neutral-900 text-white border border-neutral-700 font-bold text-xs uppercase tracking-wider rounded-sm hover:border-praticien-yellow transition-colors text-center">
+                        Voir les membres du Comité Scientifique
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================
+         6. EDITORIAL FOOTER (DEEP BLACK #0A0A0A)
+    =========================================== -->
+    <footer class="bg-praticien-black text-neutral-400 border-t-4 border-praticien-yellow">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-10 pb-12 border-b border-neutral-800">
+                
+                <!-- Col 1: Reproduced Yellow Masthead Logo & Bio (5 cols) -->
+                <div class="md:col-span-5 space-y-4">
+                    <div class="inline-block">
+                        <div class="masthead-mini text-3xl sm:text-4xl uppercase tracking-tight">
+                            LES CAHIERS<br>DU PRATICIEN
+                        </div>
+                        <div class="mt-1.5 bg-praticien-yellow text-praticien-black px-2.5 py-0.5 rounded-sm inline-block">
+                            <span class="font-sans font-black text-xs lowercase tracking-tight">
+                                revue algérienne de médecine pratique
+                            </span>
+                        </div>
+                    </div>
+                    <p class="text-sm text-neutral-400 leading-relaxed max-w-sm">
+                        Organe indépendant d'enseignement post-universitaire et de formation médicale continue à destination des médecins généralistes et spécialistes en Algérie.
+                    </p>
+                    <div class="pt-1 flex items-center gap-3 text-xs font-mono text-neutral-300">
+                        <span class="px-2 py-1 bg-neutral-900 border border-neutral-700 rounded-sm">ISSN : 1112-845X</span>
+                        <span class="px-2 py-1 bg-neutral-900 border border-neutral-700 rounded-sm">Dépôt Légal : 245-1982</span>
+                    </div>
+                </div>
+
+                <!-- Col 2: Rubriques & Spécialités (3 cols) -->
+                <div class="md:col-span-3 space-y-3">
+                    <h4 class="text-xs font-black uppercase tracking-wider text-praticien-yellow">
+                        Spécialités Archivées
+                    </h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#filtres" onclick="filterBySpecialtyFromFooter('Cardiologie')" class="hover:text-white transition-colors">Cardiologie & Vaisseaux</a></li>
+                        <li><a href="#filtres" onclick="filterBySpecialtyFromFooter('Médecine Générale')" class="hover:text-white transition-colors">Médecine Générale & Urgences</a></li>
+                        <li><a href="#filtres" onclick="filterBySpecialtyFromFooter('Pédiatrie')" class="hover:text-white transition-colors">Pédiatrie & Néonatologie</a></li>
+                        <li><a href="#filtres" onclick="filterBySpecialtyFromFooter('Endocrinologie')" class="hover:text-white transition-colors">Endocrinologie & Diabétologie</a></li>
+                        <li><a href="#filtres" onclick="filterBySpecialtyFromFooter('Pneumologie')" class="hover:text-white transition-colors">Pneumologie & Allergologie</a></li>
+                    </ul>
+                </div>
+
+                <!-- Col 3: Comité & Coordonnées (4 cols) -->
+                <div class="md:col-span-4 space-y-3">
+                    <h4 class="text-xs font-black uppercase tracking-wider text-praticien-yellow">
+                        Rédaction & Direction
+                    </h4>
+                    <div class="text-sm space-y-2 text-neutral-300">
+                        <p><strong class="text-white">Directeur de la publication :</strong> Pr. K. Mansouri</p>
+                        <p><strong class="text-white">Secrétariat de rédaction :</strong> 14 Rue Didouche Mourad, Alger-Centre, Algérie</p>
+                        <p><strong class="text-white">Courriel :</strong> redaction@cahiersdupraticien.dz</p>
+                    </div>
+                    <div class="pt-3">
+                        <span class="inline-block text-[11px] text-neutral-400 bg-neutral-900 border border-neutral-800 px-3 py-2 rounded-sm">
+                            Architecture Web : Astro Content Collections + PDF Flipbook
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Bottom Copyright -->
+            <div class="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-neutral-500 gap-4">
+                <p>© 2024 Les Cahiers du Praticien. Tous droits réservés. Réservé aux professionnels de santé.</p>
+                <div class="flex space-x-6">
+                    <a href="#archives" class="hover:text-praticien-yellow transition-colors">Index des Volumes</a>
+                    <a href="#comite" class="hover:text-praticien-yellow transition-colors">Mentions Légales</a>
+                    <a href="#comite" class="hover:text-praticien-yellow transition-colors">Politique d'Archivage</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ==========================================
+         7. INTERACTIVE FLIPBOOK READER MODAL (/revues/[slug] preview)
+    =========================================== -->
+    <div id="reader-modal" class="fixed inset-0 z-50 hidden bg-black/95 backdrop-blur-md flex flex-col justify-between select-none">
+        
+        <!-- Top Reader Toolbar -->
+        <div class="bg-praticien-black border-b border-neutral-800 px-4 sm:px-6 h-16 flex items-center justify-between text-white shrink-0">
+            <!-- Left: Route & Issue Title -->
+            <div class="flex items-center space-x-3">
+                <span class="hidden sm:inline-block font-mono text-xs bg-neutral-900 text-praticien-yellow border border-neutral-700 px-2.5 py-1 rounded-sm" id="modal-route-slug">
+                    /revues/vol12-no3
+                </span>
+                <div>
+                    <h4 id="modal-issue-title" class="text-sm font-bold text-white line-clamp-1">
+                        Vol. 12, N° 3 — Prise en charge de l'HTA résistante
+                    </h4>
+                    <p id="modal-issue-meta" class="text-[11px] text-neutral-400">
+                        Les Cahiers du Praticien • Septembre 2024
+                    </p>
+                </div>
+            </div>
+
+            <!-- Center: View Mode Switcher (2-Page Spread vs Vertical Scroll) -->
+            <div class="hidden md:flex items-center bg-neutral-900 p-1 rounded-sm border border-neutral-800">
+                <button id="btn-mode-spread" onclick="setReaderViewMode('spread')" class="px-3 py-1 text-xs font-bold rounded-sm bg-praticien-yellow text-praticien-black transition-colors">
+                    Mode Livre (2 pages)
+                </button>
+                <button id="btn-mode-single" onclick="setReaderViewMode('single')" class="px-3 py-1 text-xs font-bold rounded-sm text-neutral-400 hover:text-white transition-colors">
+                    Mode Lecture (1 page zoom)
+                </button>
+            </div>
+
+            <!-- Right: Download & Close -->
+            <div class="flex items-center space-x-3">
+                <button id="modal-download-btn" class="inline-flex items-center gap-1.5 bg-neutral-900 hover:bg-neutral-800 text-praticien-yellow border border-neutral-700 text-xs font-bold px-3 py-2 rounded-sm transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                    <span class="hidden sm:inline" id="modal-file-size">PDF (4.2 Mo)</span>
+                </button>
+                <button onclick="closeReaderModal()" class="p-2 bg-neutral-900 hover:bg-red-950 text-neutral-300 hover:text-red-300 border border-neutral-700 rounded-sm transition-colors" aria-label="Fermer la liseuse">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Center Flipbook Spread Stage -->
+        <div class="flex-grow flex items-center justify-center p-4 sm:p-8 overflow-y-auto relative">
+            
+            <!-- Previous Page Arrow -->
+            <button onclick="turnSpread(-1)" class="hidden sm:flex items-center justify-center w-12 h-12 rounded-full bg-neutral-900/90 hover:bg-praticien-yellow text-white hover:text-praticien-black border border-neutral-700 transition-colors mr-4 lg:mr-8 shrink-0 shadow-lg" title="Pages précédentes">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
+            </button>
+
+            <!-- THE 2-PAGE JOURNAL SPREAD -->
+            <div id="flipbook-container" class="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 bg-praticien-paper text-praticien-black rounded-sm shadow-[0_25px_70px_rgba(0,0,0,0.85)] border-4 border-neutral-800 overflow-hidden transition-all duration-300">
+                
+                <!-- LEFT PAGE -->
+                <div id="spread-left-page" class="book-spine-left p-6 sm:p-10 flex flex-col justify-between min-h-[480px] sm:min-h-[580px] border-b md:border-b-0 md:border-r border-neutral-300 relative">
+                    <!-- Top Running Header -->
+                    <div class="flex justify-between items-center border-b-2 border-praticien-black pb-2 text-[10px] font-black uppercase tracking-wider text-neutral-600">
+                        <span>LES CAHIERS DU PRATICIEN</span>
+                        <span id="left-page-header-vol">VOL. 12 • N° 3</span>
+                    </div>
+
+                    <!-- Page Content (Dynamic) -->
+                    <div id="left-page-body" class="my-auto py-6 space-y-4">
+                        <!-- Populated via JS -->
+                    </div>
+
+                    <!-- Bottom Page Number -->
+                    <div class="flex justify-between items-center border-t border-neutral-300 pt-2 text-xs font-bold text-neutral-600">
+                        <span id="left-page-num">Page 02</span>
+                        <span class="text-[10px] uppercase tracking-widest">revue algérienne de médecine pratique</span>
+                    </div>
+                </div>
+
+                <!-- RIGHT PAGE -->
+                <div id="spread-right-page" class="book-spine-right p-6 sm:p-10 flex flex-col justify-between min-h-[480px] sm:min-h-[580px] relative bg-[#FAF8F3]">
+                    <!-- Top Running Header -->
+                    <div class="flex justify-between items-center border-b-2 border-praticien-black pb-2 text-[10px] font-black uppercase tracking-wider text-neutral-600">
+                        <span id="right-page-specialty">DOSSIER CLINIQUE</span>
+                        <span>ISSN 1112-845X</span>
+                    </div>
+
+                    <!-- Page Content (Dynamic) -->
+                    <div id="right-page-body" class="my-auto py-6 space-y-4">
+                        <!-- Populated via JS -->
+                    </div>
+
+                    <!-- Bottom Page Number -->
+                    <div class="flex justify-between items-center border-t border-neutral-300 pt-2 text-xs font-bold text-neutral-600">
+                        <span class="text-[10px] uppercase tracking-widest">Formation Médicale Continue</span>
+                        <span id="right-page-num">Page 03</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Next Page Arrow -->
+            <button onclick="turnSpread(1)" class="hidden sm:flex items-center justify-center w-12 h-12 rounded-full bg-neutral-900/90 hover:bg-praticien-yellow text-white hover:text-praticien-black border border-neutral-700 transition-colors ml-4 lg:ml-8 shrink-0 shadow-lg" title="Pages suivantes">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
+            </button>
+
+        </div>
+
+        <!-- Bottom Reader Controls Bar -->
+        <div class="bg-praticien-black border-t border-neutral-800 px-4 py-3 flex items-center justify-between text-xs text-neutral-400 shrink-0">
+            <div class="flex items-center gap-2">
+                <span class="inline-block w-2 h-2 rounded-full bg-praticien-yellow"></span>
+                <span>Simulation du composant <code class="text-white font-mono">StPageFlip + PDF.js</code></span>
+            </div>
+            <div class="flex items-center gap-3">
+                <button onclick="turnSpread(-1)" class="px-3 py-1 bg-neutral-900 hover:bg-neutral-800 text-white border border-neutral-700 rounded-sm font-bold">
+                    ← Précédent
+                </button>
+                <span id="spread-indicator" class="font-mono text-white font-bold px-2">
+                    Planche 1 / 3
+                </span>
+                <button onclick="turnSpread(1)" class="px-3 py-1 bg-praticien-yellow text-praticien-black rounded-sm font-black">
+                    Suivant →
+                </button>
+            </div>
+            <div class="hidden sm:block text-neutral-500">
+                Utilisez les flèches du clavier ← → pour tourner les pages
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         8. NON-INTRUSIVE TOAST NOTIFICATION
+    =========================================== -->
+    <div id="toast-notification" class="fixed bottom-5 right-5 z-50 hidden max-w-md bg-praticien-black text-white border-2 border-praticien-yellow shadow-[6px_6px_0px_#FAFB00] px-5 py-4 rounded-sm flex items-start gap-3">
+        <span class="w-2.5 h-2.5 rounded-full bg-praticien-yellow mt-1.5 shrink-0"></span>
+        <div class="text-xs sm:text-sm font-medium leading-snug" id="toast-message"></div>
+    </div>
+
+    <!-- ==========================================
+         JAVASCRIPT: ARCHIVE DATA, FILTERING & FLIPBOOK PREVIEW
+    =========================================== -->
+    <script>
+        // 1. Structured Content Collection Data (Matching Astro Schema in plan.md)
+        const journalIssues = [
+            {
+                id: 0,
+                slug: "cahiers-du-praticien-vol12-no3",
+                title: "Prise en charge de l'hypertension artérielle résistante & recommandations",
+                volume: 12,
+                issue: 3,
+                date: "2024-09",
+                dateLabel: "Septembre 2024",
+                year: "2024",
+                pdfUrl: "/pdfs/cahiers-du-praticien-vol12-no3.pdf",
+                fileSize: "4.2 Mo",
+                specialties: ["Cardiologie", "Médecine Générale"],
+                authors: ["Pr. K. Mansouri", "Dr. A. Benali", "Dr. S. Meziani"],
+                coverImage: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=800&q=80",
+                abstract: "Stratégies de bithérapie fixe précoce, dépistage de l'hyperaldostéronisme primaire et suivi néphro-protecteur en médecine ambulatoire.",
+                keywords: ["HTA", "Cardiologie", "Bithérapie", "Néphroprotection"],
+                bullets: [
+                    "Algorithme décisionnel devant une HTA non contrôlée sous trithérapie",
+                    "Place de la MAPA et de l'automesure tensionnelle au cabinet",
+                    "Cas clinique : HTA secondaire chez le sujet jeune"
+                ]
+            },
+            {
+                id: 1,
+                slug: "cahiers-du-praticien-vol12-no2",
+                title: "Insulinothérapie fonctionnelle & nouvelles cibles glycémiques du Diabète Type 2",
+                volume: 12,
+                issue: 2,
+                date: "2024-05",
+                dateLabel: "Mai 2024",
+                year: "2024",
+                pdfUrl: "/pdfs/cahiers-du-praticien-vol12-no2.pdf",
+                fileSize: "3.8 Mo",
+                specialties: ["Endocrinologie", "Médecine Générale"],
+                authors: ["Pr. N. Ouali", "Dr. H. Brahimi"],
+                coverImage: "https://images.unsplash.com/photo-1579154204601-01588f351e67?auto=format&fit=crop&w=800&q=80",
+                abstract: "Introduction des agonistes du GLP-1 et inhibiteurs de SGLT2 dans la protection cardio-rénale du patient diabétique algérien.",
+                keywords: ["Diabète", "HbA1c", "Endocrinologie", "Ramadan"],
+                bullets: [
+                    "Adaptation thérapeutique du patient diabétique durant le mois de Ramadan",
+                    "Dépistage précoce de la neuropathie diabétique périphérique",
+                    "Schémas d'initiation de l'insuline basale en consultation"
+                ]
+            },
+            {
+                id: 2,
+                slug: "cahiers-du-praticien-vol12-no1",
+                title: "Urgences respiratoires pédiatriques : Bronchiolite aiguë & Asthme du nourrisson",
+                volume: 12,
+                issue: 1,
+                date: "2024-02",
+                dateLabel: "Février 2024",
+                year: "2024",
+                pdfUrl: "/pdfs/cahiers-du-praticien-vol12-no1.pdf",
+                fileSize: "4.6 Mo",
+                specialties: ["Pédiatrie", "Pneumologie"],
+                authors: ["Pr. M. Belkacem", "Dr. L. Khelifi"],
+                coverImage: "https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=800&q=80",
+                abstract: "Critères d'hospitalisation, désencombrement rhinopharyngé, oxygénothérapie et bon usage des corticoïdes inhalés chez l'enfant.",
+                keywords: ["Pédiatrie", "Bronchiolite", "Asthme", "Urgences"],
+                bullets: [
+                    "Score de gravité clinique de Wang et saturation transcutanée",
+                    "Quand prescrire une radiographie thoracique devant une dyspnée fébrile ?",
+                    "Éducation thérapeutique des parents à l'utilisation de la chambre d'inhalation"
+                ]
+            },
+            {
+                id: 3,
+                slug: "cahiers-du-praticien-vol11-no4",
+                title: "Exacerbations aiguës de BPCO & antibiothérapie raisonnée en pratique de ville",
+                volume: 11,
+                issue: 4,
+                date: "2023-11",
+                dateLabel: "Novembre 2023",
+                year: "2023",
+                pdfUrl: "/pdfs/cahiers-du-praticien-vol11-no4.pdf",
+                fileSize: "3.5 Mo",
+                specialties: ["Pneumologie", "Médecine Générale"],
+                authors: ["Pr. R. Touati", "Dr. Y. Amrani"],
+                coverImage: "https://images.unsplash.com/photo-1530497610245-94d3c16cda28?auto=format&fit=crop&w=800&q=80",
+                abstract: "Réduction de l'antibiorésistance, indications de la spirométrie au cabinet et réhabilitation respiratoire post-exacerbation.",
+                keywords: ["BPCO", "Pneumologie", "Spirométrie", "Antibiothérapie"],
+                bullets: [
+                    "Critères d'Anthonisen et choix de l'antibiothérapie probabiliste",
+                    "Technique d'inhalation : erreurs fréquentes chez le sujet âgé",
+                    "Sevrage tabagique : approche minimale et substituts nicotiniques"
+                ]
+            },
+            {
+                id: 4,
+                slug: "cahiers-du-praticien-vol11-no3",
+                title: "Fibrillation atriale non valvulaire : Anticoagulation orale directe & score CHA2DS2-VASc",
+                volume: 11,
+                issue: 3,
+                date: "2023-06",
+                dateLabel: "Juin 2023",
+                year: "2023",
+                pdfUrl: "/pdfs/cahiers-du-praticien-vol11-no3.pdf",
+                fileSize: "4.1 Mo",
+                specialties: ["Cardiologie"],
+                authors: ["Pr. K. Mansouri", "Dr. F. Ziani"],
+                coverImage: "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?auto=format&fit=crop&w=800&q=80",
+                abstract: "Évaluation du risque thrombo-embolique et hémorragique, adaptation posologique selon la clairance rénale et gestion péri-opératoire.",
+                keywords: ["ECG", "Fibrillation Atriale", "AOD", "Cardiologie"],
+                bullets: [
+                    "Lecture rapide de l'ECG : différencier FA, flutter et tachycardie atriale",
+                    "Conduite à tenir devant un surdosage ou accident hémorragique sous AOD",
+                    "Contrôle de la fréquence vs contrôle du rythme en 2023"
+                ]
+            },
+            {
+                id: 5,
+                slug: "cahiers-du-praticien-vol10-no4",
+                title: "Dysthyroïdies frustes & nodules thyroïdiens : De la TSH à l'échographie EU-TIRADS",
+                volume: 10,
+                issue: 4,
+                date: "2022-12",
+                dateLabel: "Décembre 2022",
+                year: "2022",
+                pdfUrl: "/pdfs/cahiers-du-praticien-vol10-no4.pdf",
+                fileSize: "3.9 Mo",
+                specialties: ["Endocrinologie", "Médecine Générale"],
+                authors: ["Pr. N. Ouali", "Dr. C. Derradji"],
+                coverImage: "https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=800&q=80",
+                abstract: "Arbre diagnostique devant une hypothyroïdie infraclinique, indications de la cytoponction écho-guidée et suivi de la femme enceinte.",
+                keywords: ["Thyroïde", "TSH", "EU-TIRADS", "Endocrinologie"],
+                bullets: [
+                    "Interprétation raisonnée du bilan thyroïdien (TSH, T4L, anticorps anti-TPO)",
+                    "Classification EU-TIRADS et seuils de cytoponction",
+                    "Ajustement de la L-Thyroxine pendant le premier trimestre de grossesse"
+                ]
+            }
+        ];
+
+        // State for filtering
+        let activeSpecialty = "all";
+        let activeYear = "all";
+        let searchQuery = "";
+
+        // State for Flipbook Reader Modal
+        let currentModalIssue = journalIssues[0];
+        let currentSpreadIndex = 0; // 0: Sommaire/Édito, 1: Algorithme Clinique, 2: Fiche Thérapeutique
+
+        // 2. Render Archive Grid
+        function renderJournalsGrid() {
+            const grid = document.getElementById("journals-grid");
+            const emptyState = document.getElementById("empty-state");
+            const counter = document.getElementById("results-counter");
+
+            const filtered = journalIssues.filter(item => {
+                const matchesSpecialty = activeSpecialty === "all" || item.specialties.includes(activeSpecialty);
+                const matchesYear = activeYear === "all" || item.year === activeYear;
+                const query = searchQuery.toLowerCase().trim();
+                const matchesSearch = !query || 
+                    item.title.toLowerCase().includes(query) ||
+                    item.abstract.toLowerCase().includes(query) ||
+                    item.authors.some(a => a.toLowerCase().includes(query)) ||
+                    item.keywords.some(k => k.toLowerCase().includes(query));
+
+                return matchesSpecialty && matchesYear && matchesSearch;
+            });
+
+            counter.textContent = `${filtered.length} Numéro${filtered.length > 1 ? 's' : ''} affiché${filtered.length > 1 ? 's' : ''}`;
+
+            if (filtered.length === 0) {
+                grid.innerHTML = "";
+                emptyState.classList.remove("hidden");
+                return;
+            }
+
+            emptyState.classList.add("hidden");
+
+            grid.innerHTML = filtered.map(issue => `
+                <article class="journal-card flex flex-col justify-between group">
+                    <div>
+                        <!-- A4 Vertical Journal Cover -->
+                        <div onclick="openReaderModal(${issue.id})" class="journal-card-cover aspect-[1/1.414] w-full bg-praticien-black border-2 border-praticien-black rounded-sm overflow-hidden flex flex-col justify-between cursor-pointer relative mb-4">
+                            <!-- Left Spine Effect -->
+                            <div class="magazine-spine-crease absolute inset-0 z-10 pointer-events-none"></div>
+
+                            <!-- Mini Yellow/Black Masthead Header -->
+                            <div class="bg-praticien-black px-3.5 py-3 border-b-2 border-praticien-yellow text-center">
+                                <div class="flex justify-between items-center text-[9px] font-bold text-neutral-400 uppercase mb-1">
+                                    <span>VOL. ${issue.volume} • N° ${issue.issue}</span>
+                                    <span>${issue.dateLabel}</span>
+                                </div>
+                                <div class="masthead-mini text-xl sm:text-2xl uppercase">
+                                    LES CAHIERS<br>DU PRATICIEN
+                                </div>
+                                <div class="text-[8px] font-sans font-black lowercase text-praticien-black bg-praticien-yellow mt-1 px-2 py-0.5 inline-block rounded-sm">
+                                    revue algérienne de médecine pratique
+                                </div>
+                            </div>
+
+                            <!-- Cover Clinical Image + Title Overlay -->
+                            <div class="relative flex-grow bg-neutral-900 overflow-hidden">
+                                <img 
+                                    src="${issue.coverImage}" 
+                                    alt="${issue.title}"
+                                    onerror="this.src='https://placehold.co/600x800/141414/FAFB00?text=Vol+${issue.volume}+No+${issue.issue}'"
+                                    class="w-full h-full object-cover object-center contrast-110 brightness-90 group-hover:scale-105 transition-transform duration-500"
+                                >
+                                <div class="absolute inset-0 bg-gradient-to-t from-black via-black/65 to-transparent"></div>
+                                
+                                <div class="absolute bottom-0 inset-x-0 p-4 space-y-1.5">
+                                    <div class="flex flex-wrap gap-1">
+                                        ${issue.specialties.map(spec => `
+                                            <span class="bg-praticien-yellow text-praticien-black text-[9px] font-black uppercase px-1.5 py-0.5">
+                                                ${spec}
+                                            </span>
+                                        `).join('')}
+                                    </div>
+                                    <h3 class="font-serif text-white font-bold text-base sm:text-lg leading-snug line-clamp-3">
+                                        ${issue.title}
+                                    </h3>
+                                    <p class="text-[11px] text-neutral-300 font-medium pt-0.5">
+                                        ${issue.authors.join(' • ')}
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Cover Bottom Strip -->
+                            <div class="bg-neutral-950 text-neutral-300 border-t border-neutral-800 px-3.5 py-1.5 flex items-center justify-between text-[10px] font-bold uppercase">
+                                <span>ISSN 1112-845X</span>
+                                <span class="text-praticien-yellow group-hover:underline">Feuilleter →</span>
+                            </div>
+                        </div>
+
+                        <!-- Metadata Below Cover -->
+                        <div class="space-y-2 px-0.5">
+                            <div class="flex items-center justify-between text-xs font-bold text-neutral-600">
+                                <span>Volume ${issue.volume}, Numéro ${issue.issue} (${issue.dateLabel})</span>
+                                <span class="font-mono text-[11px] bg-praticien-paperDark px-2 py-0.5 rounded-sm border border-neutral-300 text-praticien-black">
+                                    PDF • ${issue.fileSize}
+                                </span>
+                            </div>
+                            <p class="text-xs text-neutral-600 line-clamp-2 leading-relaxed">
+                                ${issue.abstract}
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Card Action Buttons -->
+                    <div class="pt-4 mt-3 border-t border-praticien-borderLight grid grid-cols-12 gap-2">
+                        <button onclick="openReaderModal(${issue.id})" class="col-span-8 inline-flex items-center justify-center gap-2 bg-praticien-black hover:bg-praticien-yellow text-white hover:text-praticien-black border border-praticien-black font-bold text-xs uppercase tracking-wider py-2.5 px-3 rounded-sm transition-colors">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                            <span>Lire (Mode Revue)</span>
+                        </button>
+                        <button onclick="triggerPdfDownload('${issue.slug}.pdf', '${issue.fileSize}')" class="col-span-4 inline-flex items-center justify-center gap-1 bg-white hover:bg-praticien-paperDark text-praticien-black border border-praticien-black font-bold text-xs uppercase py-2.5 px-2 rounded-sm transition-colors" title="Télécharger le PDF complet">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                            <span>PDF</span>
+                        </button>
+                    </div>
+                </article>
+            `).join('');
+        }
+
+        // 3. Filter Listeners
+        document.querySelectorAll('.specialty-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.specialty-btn').forEach(b => {
+                    b.classList.remove('bg-praticien-black', 'text-praticien-yellow', 'font-black');
+                    b.classList.add('bg-praticien-paper', 'text-praticien-black', 'font-bold');
+                });
+                btn.classList.remove('bg-praticien-paper', 'text-praticien-black', 'font-bold');
+                btn.classList.add('bg-praticien-black', 'text-praticien-yellow', 'font-black');
+
+                activeSpecialty = btn.getAttribute('data-specialty');
+                renderJournalsGrid();
+            });
+        });
+
+        document.getElementById('year-select').addEventListener('change', (e) => {
+            activeYear = e.target.value;
+            renderJournalsGrid();
+        });
+
+        document.getElementById('search-input').addEventListener('input', (e) => {
+            searchQuery = e.target.value;
+            renderJournalsGrid();
+        });
+
+        function resetFilters() {
+            activeSpecialty = "all";
+            activeYear = "all";
+            searchQuery = "";
+            document.getElementById('search-input').value = "";
+            document.getElementById('year-select').value = "all";
+            document.querySelector('[data-specialty="all"]').click();
+        }
+
+        function filterBySpecialtyFromFooter(specialty) {
+            const targetBtn = document.querySelector(`[data-specialty="${specialty}"]`);
+            if (targetBtn) targetBtn.click();
+        }
+
+        // 4. Interactive Flipbook Reader Modal Logic
+        function openReaderModal(issueId) {
+            currentModalIssue = journalIssues.find(i => i.id === issueId) || journalIssues[0];
+            currentSpreadIndex = 0;
+
+            document.getElementById('modal-route-slug').textContent = `/revues/${currentModalIssue.slug}`;
+            document.getElementById('modal-issue-title').textContent = `Vol. ${currentModalIssue.volume}, N° ${currentModalIssue.issue} — ${currentModalIssue.title}`;
+            document.getElementById('modal-issue-meta').textContent = `Les Cahiers du Praticien • ${currentModalIssue.dateLabel} • ${currentModalIssue.specialties.join(', ')}`;
+            document.getElementById('modal-file-size').textContent = `PDF (${currentModalIssue.fileSize})`;
+            
+            document.getElementById('modal-download-btn').onclick = () => {
+                triggerPdfDownload(`${currentModalIssue.slug}.pdf`, currentModalIssue.fileSize);
+            };
+
+            renderSpreadContent();
+            document.getElementById('reader-modal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeReaderModal() {
+            document.getElementById('reader-modal').classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+
+        function turnSpread(direction) {
+            currentSpreadIndex = (currentSpreadIndex + direction + 3) % 3;
+            renderSpreadContent();
+        }
+
+        function setReaderViewMode(mode) {
+            const container = document.getElementById('flipbook-container');
+            const rightPage = document.getElementById('spread-right-page');
+            const btnSpread = document.getElementById('btn-mode-spread');
+            const btnSingle = document.getElementById('btn-mode-single');
+
+            if (mode === 'single') {
+                container.classList.remove('md:grid-cols-2', 'max-w-5xl');
+                container.classList.add('max-w-2xl');
+                rightPage.classList.add('hidden');
+                btnSingle.classList.add('bg-praticien-yellow', 'text-praticien-black');
+                btnSingle.classList.remove('text-neutral-400');
+                btnSpread.classList.remove('bg-praticien-yellow', 'text-praticien-black');
+                btnSpread.classList.add('text-neutral-400');
+            } else {
+                container.classList.add('md:grid-cols-2', 'max-w-5xl');
+                container.classList.remove('max-w-2xl');
+                rightPage.classList.remove('hidden');
+                btnSpread.classList.add('bg-praticien-yellow', 'text-praticien-black');
+                btnSpread.classList.remove('text-neutral-400');
+                btnSingle.classList.remove('bg-praticien-yellow', 'text-praticien-black');
+                btnSingle.classList.add('text-neutral-400');
+            }
+        }
+
+        function renderSpreadContent() {
+            const issue = currentModalIssue;
+            document.getElementById('left-page-header-vol').textContent = `VOL. ${issue.volume} • N° ${issue.issue} (${issue.dateLabel})`;
+            document.getElementById('right-page-specialty').textContent = `DOSSIER : ${issue.specialties.join(' & ').toUpperCase()}`;
+            document.getElementById('spread-indicator').textContent = `Planche ${currentSpreadIndex + 1} / 3`;
+
+            const leftBody = document.getElementById('left-page-body');
+            const rightBody = document.getElementById('right-page-body');
+            const leftNum = document.getElementById('left-page-num');
+            const rightNum = document.getElementById('right-page-num');
+
+            if (currentSpreadIndex === 0) {
+                leftNum.textContent = "Page 02";
+                rightNum.textContent = "Page 03";
+
+                leftBody.innerHTML = `
+                    <div class="bg-praticien-black text-praticien-yellow p-4 rounded-sm">
+                        <div class="text-[10px] font-black uppercase tracking-widest text-white">SOMMAIRE DU NUMÉRO</div>
+                        <div class="font-display text-2xl mt-0.5">LES CAHIERS DU PRATICIEN</div>
+                    </div>
+                    <div class="space-y-3 pt-2 text-sm">
+                        <div class="flex justify-between border-b border-neutral-300 pb-2">
+                            <span class="font-bold">03. Éditorial & Points Clés</span>
+                            <span class="font-mono text-neutral-500">p. 03</span>
+                        </div>
+                        <div class="flex justify-between border-b border-neutral-300 pb-2">
+                            <span class="font-bold">04. Dossier : ${issue.title}</span>
+                            <span class="font-mono text-neutral-500">p. 04</span>
+                        </div>
+                        <div class="flex justify-between border-b border-neutral-300 pb-2">
+                            <span class="font-bold">18. Algorithme décisionnel au cabinet</span>
+                            <span class="font-mono text-neutral-500">p. 18</span>
+                        </div>
+                        <div class="flex justify-between border-b border-neutral-300 pb-2">
+                            <span class="font-bold">29. Cas Clinique commenté CHU</span>
+                            <span class="font-mono text-neutral-500">p. 29</span>
+                        </div>
+                    </div>
+                    <div class="p-3 bg-praticien-paperDark border-l-4 border-praticien-black text-xs space-y-1">
+                        <div class="font-black uppercase">Comité de rédaction du numéro :</div>
+                        <div>${issue.authors.join(', ')}</div>
+                    </div>
+                `;
+
+                rightBody.innerHTML = `
+                    <span class="inline-block bg-praticien-yellow border border-praticien-black text-praticien-black text-[10px] font-black uppercase px-2 py-0.5">
+                        MISE AU POINT CLINIQUE
+                    </span>
+                    <h3 class="font-serif text-2xl sm:text-3xl font-bold leading-tight text-praticien-black">
+                        ${issue.title}
+                    </h3>
+                    <p class="text-xs font-bold text-neutral-600">
+                        Par ${issue.authors.join(', ')}
+                    </p>
+                    <p class="text-sm leading-relaxed text-neutral-800 border-l-2 border-neutral-400 pl-3 italic">
+                        « ${issue.abstract} »
+                    </p>
+                    <div class="space-y-2 pt-2">
+                        <h4 class="text-xs font-black uppercase tracking-wider text-praticien-black">Points essentiels pour la pratique :</h4>
+                        <ul class="space-y-1.5 text-xs sm:text-sm text-neutral-800">
+                            ${issue.bullets.map(b => `<li class="flex items-start gap-2"><span class="font-black text-praticien-black">▪</span><span>${b}</span></li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+            } else if (currentSpreadIndex === 1) {
+                leftNum.textContent = "Page 04";
+                rightNum.textContent = "Page 05";
+
+                leftBody.innerHTML = `
+                    <h4 class="text-xs font-black uppercase tracking-wider bg-praticien-black text-praticien-yellow px-3 py-1.5 inline-block">
+                        1. ÉVALUATION INITIALE EN CONSULTATION
+                    </h4>
+                    <p class="text-sm leading-relaxed text-neutral-800">
+                        L'approche diagnostique repose sur un interrogatoire structuré, la vérification systématique de l'observance thérapeutique et la recherche de facteurs aggravants ou iatrogènes.
+                    </p>
+                    <div class="border-2 border-praticien-black bg-white p-4 space-y-2">
+                        <div class="text-xs font-black uppercase border-b border-neutral-300 pb-1">
+                            Tableau I — Bilan paraclinique de première intention
+                        </div>
+                        <div class="grid grid-cols-2 gap-2 text-xs">
+                            <div class="font-semibold">• Ionogramme sanguin & Kaliémie</div>
+                            <div class="font-semibold">• Créatininémie & DFG (CKD-EPI)</div>
+                            <div class="font-semibold">• Glycémie à jeun & HbA1c</div>
+                            <div class="font-semibold">• ECG de repos 12 dérivations</div>
+                        </div>
+                    </div>
+                    <p class="text-xs text-neutral-600 leading-relaxed">
+                        En présence de signes d'appel cliniques, l'orientation vers une exploration spécialisée hospitalo-universitaire permet d'écarter une étiologie secondaire curable.
+                    </p>
+                `;
+
+                rightBody.innerHTML = `
+                    <h4 class="text-xs font-black uppercase tracking-wider bg-praticien-yellow border border-praticien-black text-praticien-black px-3 py-1.5 inline-block">
+                        2. ARBRE DÉCISIONNEL THÉRAPEUTIQUE
+                    </h4>
+                    <div class="space-y-3 text-xs">
+                        <div class="p-3 bg-white border-2 border-praticien-black rounded-sm">
+                            <div class="font-black uppercase">Étape 1 : Confirmation diagnostique</div>
+                            <div class="text-neutral-700 mt-0.5">Éliminer l'effet blouse blanche et vérifier la technique de mesure ou d'administration.</div>
+                        </div>
+                        <div class="flex justify-center text-lg font-black">↓</div>
+                        <div class="p-3 bg-white border-2 border-praticien-black rounded-sm">
+                            <div class="font-black uppercase">Étape 2 : Optimisation de la stratégie combinée</div>
+                            <div class="text-neutral-700 mt-0.5">Privilégier les associations fixes validées pour renforcer l'adhésion à long terme.</div>
+                        </div>
+                        <div class="flex justify-center text-lg font-black">↓</div>
+                        <div class="p-3 bg-praticien-black text-praticien-yellow rounded-sm">
+                            <div class="font-black uppercase">Étape 3 : Réévaluation à 4–6 semaines</div>
+                            <div class="text-neutral-200 mt-0.5">Contrôle clinique et biologique systématique.</div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                leftNum.textContent = "Page 06";
+                rightNum.textContent = "Page 07";
+
+                leftBody.innerHTML = `
+                    <span class="text-[10px] font-black uppercase tracking-widest text-neutral-500">OBSERVATION CLINIQUE</span>
+                    <h4 class="font-serif text-xl font-bold text-praticien-black">
+                        Cas clinique commenté au cabinet
+                    </h4>
+                    <p class="text-xs sm:text-sm leading-relaxed text-neutral-800">
+                        Patient âgé de 58 ans, suivi depuis 6 ans, consultant pour réévaluation trimestrielle. L'examen clinique complet ainsi que l'analyse de l'ordonnance révèlent une interaction médicamenteuse fréquente avec la prise d'AINS en automédication.
+                    </p>
+                    <div class="p-3.5 bg-praticien-yellow/30 border border-praticien-black text-xs space-y-1">
+                        <div class="font-black uppercase">À retenir pour le praticien :</div>
+                        <div>Toujours rechercher l'automédication et privilégier l'éducation thérapeutique personnalisée lors de chaque renouvellement.</div>
+                    </div>
+                `;
+
+                rightBody.innerHTML = `
+                    <div class="border-2 border-praticien-black p-5 bg-white space-y-4">
+                        <div class="flex items-center justify-between border-b-2 border-praticien-black pb-2">
+                            <span class="font-black text-xs uppercase">FICHE SYNTHÈSE À CONSERVER</span>
+                            <span class="bg-praticien-yellow text-praticien-black text-[10px] font-black px-2 py-0.5">FMC ALGÉRIE</span>
+                        </div>
+                        <p class="text-xs text-neutral-700 leading-relaxed">
+                            Téléchargez l'intégralité de ce numéro (${issue.fileSize}) pour accéder aux 48 pages, aux tableaux posologiques complets et aux références bibliographiques.
+                        </p>
+                        <button onclick="triggerPdfDownload('${issue.slug}.pdf', '${issue.fileSize}')" class="w-full py-3 bg-praticien-black hover:bg-praticien-yellow text-praticien-yellow hover:text-praticien-black font-black text-xs uppercase tracking-wider transition-colors rounded-sm">
+                            Télécharger le numéro complet (${issue.fileSize})
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        // Keyboard navigation for Flipbook Modal
+        window.addEventListener('keydown', (e) => {
+            const modal = document.getElementById('reader-modal');
+            if (modal.classList.contains('hidden')) return;
+            if (e.key === 'Escape') closeReaderModal();
+            if (e.key === 'ArrowRight') turnSpread(1);
+            if (e.key === 'ArrowLeft') turnSpread(-1);
+        });
+
+        // 5. Toast Helper (No alert() used)
+        let toastTimeout;
+        function showToast(message) {
+            const toast = document.getElementById('toast-notification');
+            const msgEl = document.getElementById('toast-message');
+            msgEl.textContent = message;
+            toast.classList.remove('hidden');
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 4000);
+        }
+
+        function triggerPdfDownload(filename, size) {
+            showToast(`Téléchargement lancé : /pdfs/${filename} (${size})`);
+        }
+
+        // Initialize grid on load
+        window.onload = function () {
+            renderJournalsGrid();
+        };
+    </script>
+</body>
+</html>

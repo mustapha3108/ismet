@@ -1,0 +1,699 @@
+---
+import { books } from '../data/books.js';
+
+interface Props {
+  pdfUrl?: string;
+  bookTitle?: string;
+  downloadUrl?: string;
+  coverImage?: any;
+}
+
+const defaultBook = books[0] || {
+  id: "7",
+  edition: "Numéro 07",
+  title: "Revue médicale",
+  pdfUrl: "/pdf7.pdf",
+  coverImage: "/covers/cover7.webp"
+};
+
+const { 
+  pdfUrl = defaultBook.pdfUrl, 
+  bookTitle = `${defaultBook.edition} — ${defaultBook.title}`, 
+  downloadUrl = pdfUrl,
+  coverImage = defaultBook.coverImage
+} = Astro.props;
+
+const coverUrl = typeof coverImage === 'string' 
+  ? coverImage 
+  : (coverImage?.src || "/covers/cover7.webp");
+---
+
+<div 
+  id="reader-wrapper" 
+  class="relative w-full h-full flex flex-col bg-neutral-950 text-neutral-100 select-none overflow-hidden"
+  data-default-pdf={pdfUrl}
+  data-default-title={bookTitle}
+  data-default-cover={coverUrl}
+  data-books={JSON.stringify(books)}
+>
+  
+  <!-- 1. Barre de contrôle supérieure -->
+  <header class="h-14 bg-neutral-900 border-b border-neutral-800 px-3 sm:px-6 flex items-center justify-between gap-3 z-30 shrink-0">
+    <!-- Gauche : Navigation retour et Titre -->
+    <div class="flex items-center gap-3 min-w-0">
+      <a 
+        href="/" 
+        class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-neutral-800 hover:bg-neutral-700 text-neutral-200 hover:text-white transition-colors text-xs font-semibold shrink-0"
+        title="Retour au catalogue"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+        <span>Retour</span>
+      </a>
+
+      <div class="h-4 w-px bg-neutral-800 hidden sm:block shrink-0"></div>
+
+      <h1 id="reader-title" class="text-xs sm:text-sm font-semibold truncate text-neutral-200">
+        {bookTitle}
+      </h1>
+    </div>
+
+    <!-- Droite : Indicateur Desktop & Téléchargement -->
+    <div class="flex items-center gap-2 sm:gap-3 shrink-0">
+      <!-- Indicateur de page & Statut (Desktop) -->
+      <div class="hidden md:flex items-center gap-2 bg-neutral-950 border border-neutral-800 rounded px-2.5 py-1 text-xs font-mono">
+        <span id="loading-spinner-header" class="loading loading-spinner loading-xs text-primary"></span>
+        <span id="page-indicator" class="text-neutral-300">Chargement...</span>
+      </div>
+
+      <!-- Bouton Plein Écran -->
+      <button 
+        id="btn-fullscreen" 
+        type="button"
+        class="p-2 rounded-md bg-neutral-800 hover:bg-neutral-700 text-neutral-300 hover:text-white transition-colors cursor-pointer"
+        title="Plein écran"
+        aria-label="Basculer plein écran"
+      >
+        <svg id="fs-icon-expand" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+        </svg>
+        <svg id="fs-icon-compress" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+
+      <!-- Télécharger PDF -->
+      <a 
+        id="reader-download-link"
+        href={downloadUrl} 
+        download 
+        class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-primary text-primary-content hover:opacity-90 font-bold transition-all text-xs shadow-sm cursor-pointer"
+        title="Télécharger le fichier PDF"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+        </svg>
+        <span class="hidden sm:inline">Télécharger</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- 2. Zone Principale du Flipbook -->
+  <main class="relative flex-1 w-full flex items-center justify-center p-2 sm:p-4 overflow-hidden bg-neutral-950">
+    
+    <!-- Message d'erreur -->
+    <div id="reader-error" class="hidden absolute inset-0 flex flex-col items-center justify-center bg-neutral-950 z-30 p-6 text-center space-y-4">
+      <div class="text-warning text-4xl">⚠️</div>
+      <h3 class="text-lg font-bold">Impossible de charger le document</h3>
+      <p id="error-details" class="text-xs text-neutral-400 max-w-md font-mono">
+        Une erreur est survenue lors de l'initialisation du lecteur.
+      </p>
+      <a id="error-download-link" href={downloadUrl} download class="btn btn-primary btn-sm">
+        Télécharger le fichier PDF
+      </a>
+    </div>
+
+    <!-- Bouton précédent flottant (Desktop) -->
+    <button 
+      id="btn-prev-side" 
+      type="button"
+      class="hidden md:flex absolute left-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-neutral-900/90 hover:bg-neutral-800 text-white items-center justify-center shadow-2xl transition-all active:scale-95 border border-neutral-700 disabled:opacity-20 disabled:pointer-events-none cursor-pointer"
+      title="Page précédente"
+      aria-label="Page précédente"
+      disabled
+    >
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
+      </svg>
+    </button>
+
+    <!-- Conteneur d'affichage du livre -->
+    <div 
+      id="book-container" 
+      class="relative w-full h-full flex items-center justify-center overflow-hidden"
+    >
+      <!-- 1. Couverture instantanée visible immédiatement (< 100ms) -->
+      <div 
+        id="preview-cover" 
+        class="absolute flex items-center justify-center transition-opacity duration-300 z-10 pointer-events-none"
+      >
+        <div class="journal-cover-a4 rounded-sm border border-neutral-800/80 shadow-2xl overflow-hidden bg-neutral-900 flex items-center justify-center">
+          <img 
+            id="preview-cover-img"
+            src={coverUrl} 
+            alt="Couverture de la revue" 
+            class="w-full h-full object-cover"
+            loading="eager"
+            fetchpriority="high"
+          />
+        </div>
+      </div>
+
+      <!-- 2. Flipbook interactif -->
+      <div id="flipbook" class="flipbook shadow-2xl opacity-0 transition-opacity duration-300">
+        <!-- Les pages HTML seront injectées dynamiquement par le script -->
+      </div>
+    </div>
+
+    <!-- Bouton suivant flottant (Desktop) -->
+    <button 
+      id="btn-next-side" 
+      type="button"
+      class="hidden md:flex absolute right-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-neutral-900/90 hover:bg-neutral-800 text-white items-center justify-center shadow-2xl transition-all active:scale-95 border border-neutral-700 disabled:opacity-20 disabled:pointer-events-none cursor-pointer"
+      title="Page suivante"
+      aria-label="Page suivante"
+      disabled
+    >
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
+      </svg>
+    </button>
+
+  </main>
+
+  <!-- 3. Barre de navigation spacieuse dédiée au Mobile (Bas de l'écran) -->
+  <footer class="h-16 md:hidden bg-neutral-900 border-t border-neutral-800 px-4 py-2 flex items-center justify-between gap-3 z-30 shrink-0 shadow-2xl">
+    <!-- Bouton Précédent Mobile -->
+    <button 
+      id="btn-prev-mobile" 
+      type="button"
+      class="flex-1 h-11 flex items-center justify-center gap-2 rounded-lg bg-neutral-800 active:bg-neutral-700 text-neutral-200 border border-neutral-700/80 font-bold text-xs tracking-wide transition-all active:scale-95 disabled:opacity-30 disabled:pointer-events-none touch-manipulation cursor-pointer"
+      aria-label="Page précédente"
+      disabled
+    >
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
+      </svg>
+      <span>Précédent</span>
+    </button>
+
+    <!-- Indicateur de page au centre -->
+    <div class="px-3.5 py-2 rounded-lg bg-neutral-950 border border-neutral-800 font-mono text-xs font-bold text-neutral-200 min-w-[85px] text-center shadow-inner select-none flex items-center justify-center gap-1.5">
+      <span id="mobile-spinner" class="loading loading-spinner loading-xs text-primary"></span>
+      <span id="page-indicator-mobile">Page 1</span>
+    </div>
+
+    <!-- Bouton Suivant Mobile (Couleur primaire pour action évidente) -->
+    <button 
+      id="btn-next-mobile" 
+      type="button"
+      class="flex-1 h-11 flex items-center justify-center gap-2 rounded-lg bg-primary hover:opacity-95 active:opacity-90 text-primary-content font-bold text-xs tracking-wide shadow-md transition-all active:scale-95 disabled:opacity-30 disabled:pointer-events-none touch-manipulation cursor-pointer"
+      aria-label="Page suivante"
+      disabled
+    >
+      <span>Suivant</span>
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
+      </svg>
+    </button>
+  </footer>
+
+</div>
+
+<style>
+  #book-container {
+    perspective: 2500px;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  .flipbook {
+    margin: auto;
+  }
+
+  :global(.page-card) {
+    background-color: #ffffff;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.35);
+    overflow: hidden;
+    position: relative;
+    user-select: none;
+    -webkit-user-select: none;
+    will-change: transform, opacity;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+
+  :global(.page-card img) {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    background-color: #ffffff;
+    pointer-events: none;
+    transition: opacity 180ms ease-out;
+  }
+
+  :global(.page-card .page-loading) {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #f7f7f7;
+    color: #888888;
+    font-family: monospace;
+    font-size: 11px;
+    gap: 8px;
+    z-index: 2;
+  }
+
+  :global(.book-spine-left) {
+    box-shadow: inset -10px 0 20px rgba(0, 0, 0, 0.12);
+  }
+  :global(.book-spine-right) {
+    box-shadow: inset 10px 0 20px rgba(0, 0, 0, 0.12);
+  }
+</style>
+
+<script>
+  import * as pdfjsLib from 'pdfjs-dist';
+  import pdfWorkerUrl from 'pdfjs-dist/build/pdf.worker.min.mjs?url';
+  import * as PageFlipModule from 'page-flip';
+
+  const PageFlip = (PageFlipModule as any).PageFlip || (PageFlipModule as any).default?.PageFlip || (PageFlipModule as any).default || PageFlipModule;
+
+  pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorkerUrl;
+
+  // Rognage automatique de la marge prépresse pour éliminer les repères de coupe (crop marks)
+  function normalizePageView(page: any) {
+    try {
+      const origView = page.view;
+      if (Array.isArray(origView) && origView.length === 4) {
+        const rawW = origView[2] - origView[0];
+        const rawH = origView[3] - origView[1];
+        // Si le document possède des traits de coupe et fond perdu prépresse (rawW > 600 et rawH > 850)
+        // Format A4 standard : 595.28 x 841.89 pt
+        if (rawW > 600 && rawH > 850 && page._pageInfo) {
+          const bleedX = (rawW - 595.28) / 2;
+          const bleedY = (rawH - 841.89) / 2;
+          page._pageInfo.view = [
+            origView[0] + bleedX,
+            origView[1] + bleedY,
+            origView[2] - bleedX,
+            origView[3] - bleedY,
+          ];
+        }
+      }
+    } catch (e) {
+      console.warn("Rognage automatique ignoré:", e);
+    }
+  }
+
+  async function initReader() {
+    const wrapper = document.getElementById('reader-wrapper');
+    if (!wrapper) return;
+
+    const defaultPdfUrl = wrapper.dataset.defaultPdf || '/pdf7.pdf';
+    const defaultTitle = wrapper.dataset.defaultTitle || 'Revue médicale';
+    const defaultCover = wrapper.dataset.defaultCover || '/covers/cover7.webp';
+
+    let allBooks: any[] = [];
+    try {
+      allBooks = JSON.parse(wrapper.dataset.books || '[]');
+    } catch {}
+
+    const errorEl = document.getElementById('reader-error');
+    const errorDetails = document.getElementById('error-details');
+    const errorDownloadLink = document.getElementById('error-download-link') as HTMLAnchorElement;
+    const flipbookEl = document.getElementById('flipbook');
+    const containerEl = document.getElementById('book-container');
+    const previewCover = document.getElementById('preview-cover');
+    const previewCoverImg = document.getElementById('preview-cover-img') as HTMLImageElement;
+    const headerSpinner = document.getElementById('loading-spinner-header');
+    const mobileSpinner = document.getElementById('mobile-spinner');
+    const pageIndicator = document.getElementById('page-indicator');
+    const pageIndicatorMobile = document.getElementById('page-indicator-mobile');
+    const titleEl = document.getElementById('reader-title');
+    const downloadLink = document.getElementById('reader-download-link') as HTMLAnchorElement;
+    const btnPrevSide = document.getElementById('btn-prev-side') as HTMLButtonElement;
+    const btnNextSide = document.getElementById('btn-next-side') as HTMLButtonElement;
+    const btnPrevMobile = document.getElementById('btn-prev-mobile') as HTMLButtonElement;
+    const btnNextMobile = document.getElementById('btn-next-mobile') as HTMLButtonElement;
+    const btnFullscreen = document.getElementById('btn-fullscreen');
+    const fsIconExpand = document.getElementById('fs-icon-expand');
+    const fsIconCompress = document.getElementById('fs-icon-compress');
+
+    let targetPdfUrl = defaultPdfUrl;
+    let targetTitle = defaultTitle;
+    let targetCoverImage = defaultCover;
+
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      const queryId = urlParams.get('id');
+      const queryPdf = urlParams.get('pdf');
+
+      if (queryId && Array.isArray(allBooks)) {
+        const found = allBooks.find((b: any) => String(b.id) === String(queryId));
+        if (found) {
+          targetPdfUrl = found.pdfUrl;
+          targetTitle = `${found.edition} — ${found.title}`;
+          if (found.coverImage) {
+            targetCoverImage = typeof found.coverImage === 'string' 
+              ? found.coverImage 
+              : (found.coverImage.src || defaultCover);
+          }
+        }
+      } else if (queryPdf) {
+        targetPdfUrl = queryPdf;
+      }
+
+      if (titleEl) titleEl.textContent = targetTitle;
+      document.title = `${targetTitle} — Les Cahiers du Praticien`;
+      if (downloadLink) downloadLink.href = targetPdfUrl;
+      if (errorDownloadLink) errorDownloadLink.href = targetPdfUrl;
+
+      // Affichage instantané de la couverture sélectionnée
+      if (previewCoverImg && targetCoverImage) {
+        previewCoverImg.src = targetCoverImage;
+      }
+
+      // Calcul des dimensions de page A4 responsive
+      const containerRect = containerEl ? containerEl.getBoundingClientRect() : { width: window.innerWidth, height: window.innerHeight - 120 };
+      const availableWidth = containerRect.width || window.innerWidth;
+      const availableHeight = containerRect.height || (window.innerHeight - 120);
+      const isMobile = window.innerWidth < 768;
+
+      const a4AspectRatio = 595.28 / 841.89; // 0.707
+      let targetHeight = Math.min(availableHeight * 0.94, 950);
+      let targetWidth = targetHeight * a4AspectRatio;
+
+      if (isMobile) {
+        targetWidth = Math.min(availableWidth * 0.96, 480);
+        targetHeight = targetWidth / a4AspectRatio;
+        if (targetHeight > availableHeight * 0.92) {
+          targetHeight = availableHeight * 0.92;
+          targetWidth = targetHeight * a4AspectRatio;
+        }
+      } else if (targetWidth * 2 > availableWidth * 0.94) {
+        targetWidth = (availableWidth * 0.92) / 2;
+        targetHeight = targetWidth / a4AspectRatio;
+      }
+
+      // Appliquer les dimensions sur la couverture instantanée
+      if (previewCover) {
+        const coverBox = previewCover.querySelector('.journal-cover-a4') as HTMLElement;
+        if (coverBox) {
+          coverBox.style.width = `${Math.round(targetWidth)}px`;
+          coverBox.style.height = `${Math.round(targetHeight)}px`;
+        }
+      }
+
+      if (pageIndicator) pageIndicator.textContent = "Numéro prêt";
+      if (pageIndicatorMobile) pageIndicatorMobile.textContent = "Page 1";
+
+      // Téléchargement progressif non-bloquant en tâche de fond
+      const loadingTask = pdfjsLib.getDocument({
+        url: targetPdfUrl,
+        cMapUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@' + (pdfjsLib.version || '6.4.299') + '/cmaps/',
+        cMapPacked: true,
+        rangeChunkSize: 65536,
+      });
+
+      const pdfDoc = await loadingTask.promise;
+      const totalPages = pdfDoc.numPages;
+
+      // Déterminer la résolution idéale
+      const page1 = await pdfDoc.getPage(1);
+      normalizePageView(page1);
+      const vp1 = page1.getViewport({ scale: 1.0 });
+      const pageWidth = vp1.width;
+
+      const optimalScale = isMobile 
+        ? Math.min((targetWidth / pageWidth) * 1.15, 1.2)
+        : Math.min((targetWidth / pageWidth) * 1.35, 1.5);
+
+      // Cache mémoire des pages
+      const renderedBlobs = new Map<number, string>();
+      // Pré-remplir la page 1 avec la couverture instantanée
+      if (targetCoverImage) {
+        renderedBlobs.set(1, targetCoverImage);
+      }
+
+      const renderQueue: number[] = [];
+      let isWorkerRendering = false;
+
+      async function processQueue() {
+        if (isWorkerRendering || renderQueue.length === 0) return;
+        isWorkerRendering = true;
+        const pageNum = renderQueue.shift()!;
+
+        if (!renderedBlobs.has(pageNum)) {
+          try {
+            const page = await pdfDoc.getPage(pageNum);
+            normalizePageView(page);
+            const viewport = page.getViewport({ scale: optimalScale });
+
+            const canvas = document.createElement('canvas');
+            canvas.width = Math.round(viewport.width);
+            canvas.height = Math.round(viewport.height);
+            const ctx = canvas.getContext('2d', { alpha: false });
+
+            if (ctx) {
+              await page.render({
+                canvasContext: ctx,
+                viewport: viewport,
+              }).promise;
+
+              const blobUrl = await new Promise<string | null>((resolve) => {
+                canvas.toBlob((blob) => {
+                  resolve(blob ? URL.createObjectURL(blob) : null);
+                }, 'image/webp', 0.82);
+              });
+
+              if (blobUrl) {
+                renderedBlobs.set(pageNum, blobUrl);
+                if (flipbookEl) {
+                  const pageEl = flipbookEl.querySelector(`[data-page-num="${pageNum}"]`);
+                  if (pageEl) {
+                    const img = pageEl.querySelector('img');
+                    if (img && !img.src.startsWith('blob:')) {
+                      img.src = blobUrl;
+                      const loader = pageEl.querySelector('.page-loading');
+                      if (loader) loader.remove();
+                    }
+                  }
+                }
+              }
+            }
+          } catch (err) {
+            console.error(`Erreur rendu page ${pageNum}:`, err);
+          }
+        }
+
+        isWorkerRendering = false;
+        if (renderQueue.length > 0) {
+          processQueue();
+        }
+      }
+
+      function queuePageRender(pageNum: number, priority: boolean = false) {
+        if (pageNum < 1 || pageNum > totalPages || renderedBlobs.has(pageNum)) return;
+        if (priority) {
+          const idx = renderQueue.indexOf(pageNum);
+          if (idx !== -1) renderQueue.splice(idx, 1);
+          renderQueue.unshift(pageNum);
+        } else if (!renderQueue.includes(pageNum)) {
+          renderQueue.push(pageNum);
+        }
+        processQueue();
+      }
+
+      // Construction des éléments de page HTML
+      if (!flipbookEl) return;
+      flipbookEl.innerHTML = '';
+
+      for (let i = 1; i <= totalPages; i++) {
+        const pageDiv = document.createElement('div');
+        pageDiv.className = `page-card ${i % 2 === 0 ? 'book-spine-right' : 'book-spine-left'}`;
+        pageDiv.setAttribute('data-density', i === 1 || i === totalPages ? 'hard' : 'soft');
+        pageDiv.setAttribute('data-page-num', String(i));
+
+        const img = document.createElement('img');
+        img.alt = `Page ${i}`;
+        
+        if (renderedBlobs.has(i)) {
+          img.src = renderedBlobs.get(i)!;
+        } else {
+          const loader = document.createElement('div');
+          loader.className = 'page-loading';
+          loader.innerHTML = `
+            <div class="loading loading-spinner loading-sm text-neutral-400"></div>
+            <span>Page ${i}</span>
+          `;
+          pageDiv.appendChild(loader);
+        }
+
+        pageDiv.appendChild(img);
+        flipbookEl.appendChild(pageDiv);
+      }
+
+      // Initialisation du moteur PageFlip
+      const pageFlip = new PageFlip(flipbookEl, {
+        width: Math.round(targetWidth),
+        height: Math.round(targetHeight),
+        size: 'fixed',
+        minWidth: 240,
+        maxWidth: 900,
+        minHeight: 340,
+        maxHeight: 1300,
+        maxShadowOpacity: 0.25,
+        showCover: true,
+        usePortrait: true,
+        flippingTime: isMobile ? 250 : 320,
+        mobileScrollSupport: true,
+        useMouseEvents: !isMobile,
+        swipeDistance: isMobile ? 999999 : 25,
+        disableFlipByClick: false,
+      });
+
+      const pageElements = flipbookEl.querySelectorAll('.page-card');
+      pageFlip.loadFromHTML(pageElements);
+
+      // Transition fluide : masquer la couverture instantanée et révéler le flipbook
+      flipbookEl.classList.remove('opacity-0');
+      if (previewCover) {
+        previewCover.classList.add('opacity-0');
+        setTimeout(() => { previewCover.remove(); }, 350);
+      }
+
+      // Masquer les spinners d'initialisation
+      if (headerSpinner) headerSpinner.remove();
+      if (mobileSpinner) mobileSpinner.remove();
+
+      function updatePageDisplay(pageIndex: number) {
+        const currentNum = pageIndex + 1;
+        const text = `Page ${currentNum} / ${totalPages}`;
+        if (pageIndicator) pageIndicator.textContent = text;
+        if (pageIndicatorMobile) pageIndicatorMobile.textContent = text;
+
+        queuePageRender(currentNum, true);
+        if (!isMobile && currentNum + 1 <= totalPages) {
+          queuePageRender(currentNum + 1, true);
+        }
+
+        if (currentNum + 2 <= totalPages) queuePageRender(currentNum + 2, false);
+        if (currentNum - 1 >= 1) queuePageRender(currentNum - 1, false);
+
+        const isAtStart = pageIndex <= 0;
+        const isAtEnd = pageIndex >= totalPages - 1;
+
+        if (btnPrevSide) btnPrevSide.disabled = isAtStart;
+        if (btnNextSide) btnNextSide.disabled = isAtEnd;
+        if (btnPrevMobile) btnPrevMobile.disabled = isAtStart;
+        if (btnNextMobile) btnNextMobile.disabled = isAtEnd;
+      }
+
+      pageFlip.on('flip', (e: any) => {
+        updatePageDisplay(e.data);
+        isTransitioning = false;
+      });
+
+      pageFlip.on('init', () => {
+        updatePageDisplay(0);
+        // Précharger immédiatement la page 2 en arrière-plan
+        if (totalPages > 1) {
+          queuePageRender(2, true);
+        }
+      });
+
+      let isTransitioning = false;
+
+      function goNext() {
+        if (isTransitioning) return;
+        const current = pageFlip.getCurrentPageIndex();
+        if (current >= totalPages - 1) return;
+
+        isTransitioning = true;
+        if (isMobile) {
+          pageFlip.turnToNextPage();
+          setTimeout(() => { isTransitioning = false; }, 250);
+        } else {
+          pageFlip.flipNext();
+          setTimeout(() => { isTransitioning = false; }, 350);
+        }
+      }
+
+      function goPrev() {
+        if (isTransitioning) return;
+        const current = pageFlip.getCurrentPageIndex();
+        if (current <= 0) return;
+
+        isTransitioning = true;
+        if (isMobile) {
+          pageFlip.turnToPrevPage();
+          setTimeout(() => { isTransitioning = false; }, 250);
+        } else {
+          pageFlip.flipPrev();
+          setTimeout(() => { isTransitioning = false; }, 350);
+        }
+      }
+
+      function attachNavAction(btn: HTMLElement | null, action: () => void) {
+        if (!btn) return;
+        let lastHandled = 0;
+
+        const execute = (e: Event) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const now = Date.now();
+          if (now - lastHandled < 220) return;
+          lastHandled = now;
+          action();
+        };
+
+        btn.addEventListener('touchend', execute, { passive: false });
+        btn.addEventListener('click', execute);
+      }
+
+      attachNavAction(btnPrevSide, goPrev);
+      attachNavAction(btnNextSide, goNext);
+      attachNavAction(btnPrevMobile, goPrev);
+      attachNavAction(btnNextMobile, goNext);
+
+      // Support clavier
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') goPrev();
+        if (e.key === 'ArrowRight') goNext();
+      });
+
+      // Plein écran
+      if (btnFullscreen) {
+        btnFullscreen.addEventListener('click', () => {
+          const wrapperEl = document.getElementById('reader-wrapper');
+          if (!wrapperEl) return;
+          if (!document.fullscreenElement) {
+            wrapperEl.requestFullscreen().catch(() => {});
+            fsIconExpand?.classList.add('hidden');
+            fsIconCompress?.classList.remove('hidden');
+          } else {
+            document.exitFullscreen().catch(() => {});
+            fsIconExpand?.classList.remove('hidden');
+            fsIconCompress?.classList.add('hidden');
+          }
+        });
+      }
+
+      document.addEventListener('fullscreenchange', () => {
+        if (!document.fullscreenElement) {
+          fsIconExpand?.classList.remove('hidden');
+          fsIconCompress?.classList.add('hidden');
+        }
+      });
+
+    } catch (err: any) {
+      console.error("Erreur d'initialisation du lecteur:", err);
+      if (previewCover) previewCover.remove();
+      if (errorEl) errorEl.classList.remove('hidden');
+      if (errorDetails) errorDetails.textContent = err?.message || String(err);
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initReader);
+  } else {
+    initReader();
+  }
+</script>

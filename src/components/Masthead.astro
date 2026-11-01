@@ -1,0 +1,29 @@
+---
+interface Props {
+  class?: string;
+  themeStyle?: 'swiss' | 'daylight' | 'minimal';
+}
+
+const { class: className = "", themeStyle = "swiss" } = Astro.props;
+---
+
+<header class={`py-8 sm:py-12 text-center border-b border-base-300 relative ${className}`}>
+  <div class="max-w-5xl mx-auto px-4">
+    <!-- Reproduction exacte du Logo Bulbeux Vintage 70s/80s -->
+    <div class="inline-block mx-auto select-none px-2">
+      <h1 class="cahiers-masthead-title text-5xl sm:text-7xl md:text-8xl tracking-tight">
+        <span class="block">LES CAHIERS</span>
+        <span class="block mt-1 sm:mt-0">DU PRATICIEN</span>
+      </h1>
+      
+      <!-- Sous-titre en cartouche pour style Swiss ou typographie soignée -->
+      <div class="mt-4 sm:mt-5 inline-block">
+        <div class="bg-primary text-primary-content px-4 py-1.5 sm:py-2 rounded-sm shadow-md inline-block">
+          <p class="cahiers-masthead-subtitle text-sm sm:text-xl md:text-2xl tracking-tight leading-none">
+            revue algérienne de médecine pratique
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>

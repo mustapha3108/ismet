@@ -1,0 +1,368 @@
+/* ==========================================================================
+   Les Cahiers du Praticien — Global Styles, Typography & 3 DaisyUI Themes
+   Location: src/styles/global.css (Import in your main Astro Layout)
+   ========================================================================== */
+
+/* 1. Google Fonts are loaded asynchronously with preconnect in Layout.astro to optimize FCP/LCP */
+
+/* ==========================================================================
+   OPTION A: Tailwind v4 + DaisyUI v5 Setup (Default in Astro 5+)
+   (If you are on Tailwind v3 + tailwind.config.mjs, see the reference block at the bottom)
+   ========================================================================== */
+@import "tailwindcss";
+@plugin "daisyui";
+
+@theme {
+  /* Custom Font Families -> gives you `font-masthead`, `font-subtitle`, `font-serif`, `font-sans`, `font-mono` */
+  --font-masthead: "Titan One", cursive, sans-serif;
+  --font-subtitle: "Inter", "Helvetica Neue", "Arial Black", sans-serif;
+  --font-serif: "Newsreader", "Instrument Serif", Georgia, serif;
+  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+
+  /* Brand Heritage Palette Tokens */
+  --color-cahiers-yellow: #FAFB00;
+  --color-cahiers-yellow-web: #FFEE00;
+  --color-cahiers-gold: #F5E600;
+  --color-cahiers-black: #0A0A0A;
+  --color-cahiers-paper: #FBF9F5;
+  --color-cahiers-alabaster: #FAF7F0;
+  --color-cahiers-teal: #0F4C5C;
+  --color-cahiers-sage: #1B4332;
+}
+
+/* ==========================================================================
+   THEME 1: `cahiers-swiss`
+   Design 1 — "Swiss Archival Editorial"
+   High-contrast matte black masthead (#0A0A0A) + iconic yellow (#FFEE00) + warm paper grid (#F7F5F0)
+   ========================================================================== */
+@plugin "daisyui/theme" {
+  name: "cahiers-swiss";
+  default: false;
+  prefersdark: false;
+  color-scheme: light;
+
+  /* Surfaces */
+  --color-base-100: #F7F5F0;        /* Warm Archival Paper */
+  --color-base-200: #EFECE6;        /* Secondary Card / Filter Strip Surface */
+  --color-base-300: #DCD7CD;        /* Structural 1px Grid Borders */
+  --color-base-content: #0A0A0A;    /* Deep Print Ink */
+
+  /* Brand Accents */
+  --color-primary: #FFEE00;         /* Web-optimized Cahiers Yellow (#FAFB00 variant) */
+  --color-primary-content: #000000; /* Pure Black on Yellow */
+
+  --color-secondary: #0A0A0A;       /* Masthead Matte Black */
+  --color-secondary-content: #FAFB00; /* Process Yellow on Black */
+
+  --color-accent: #C83E2B;          /* Editorial Stamp Red */
+  --color-accent-content: #FFFFFF;
+
+  --color-neutral: #0A0A0A;         /* Footer & Masthead Container */
+  --color-neutral-content: #F7F5F0;
+
+  /* Semantic States */
+  --color-info: #1D4ED8;
+  --color-info-content: #FFFFFF;
+  --color-success: #15803D;
+  --color-success-content: #FFFFFF;
+  --color-warning: #EAB308;
+  --color-warning-content: #000000;
+  --color-error: #B91C1C;
+  --color-error-content: #FFFFFF;
+
+  /* Swiss Grid Geometry: Crisp corners & 1px borders */
+  --radius-selector: 0.125rem;
+  --radius-field: 0.125rem;
+  --radius-box: 0.125rem;
+  --border: 1px;
+  --depth: 1;
+  --noise: 0;
+}
+
+/* ==========================================================================
+   THEME 2: `cahiers-daylight`
+   Design 2 — "Sunlit Editorial Daylight & Clinical Teal"
+   Zero heavy black: warm alabaster paper (#FAF7F0), clinical teal (#0F4C5C), sage (#1B4332), and 3D yellow masthead
+   ========================================================================== */
+@plugin "daisyui/theme" {
+  name: "cahiers-daylight";
+  default: false;
+  prefersdark: false;
+  color-scheme: light;
+
+  /* Surfaces */
+  --color-base-100: #FAF7F0;        /* Sunlit Alabaster / Ivory */
+  --color-base-200: #F2ECE1;        /* Warm Sand Secondary Surface */
+  --color-base-300: #E2D9C8;        /* Soft Editorial Border */
+  --color-base-content: #132A32;    /* Deep Slate Teal Ink */
+
+  /* Brand Accents */
+  --color-primary: #0F4C5C;         /* Clinical Teal Primary Action */
+  --color-primary-content: #FAF7F0;
+
+  --color-secondary: #FFEE00;       /* Iconic Cahiers Yellow Highlight */
+  --color-secondary-content: #0F2930;
+
+  --color-accent: #1B4332;          /* Botanical / Clinical Sage Green */
+  --color-accent-content: #FAF7F0;
+
+  --color-neutral: #132A32;         /* Deep Clinical Slate (replaces pure black) */
+  --color-neutral-content: #FAF7F0;
+
+  /* Semantic States */
+  --color-info: #0284C7;
+  --color-info-content: #FFFFFF;
+  --color-success: #1B4332;
+  --color-success-content: #FFFFFF;
+  --color-warning: #F59E0B;
+  --color-warning-content: #000000;
+  --color-error: #DC2626;
+  --color-error-content: #FFFFFF;
+
+  /* Warm, slightly softened editorial geometry */
+  --radius-selector: 0.375rem;
+  --radius-field: 0.375rem;
+  --radius-box: 0.5rem;
+  --border: 1px;
+  --depth: 1;
+  --noise: 0;
+}
+
+/* ==========================================================================
+   THEME 3: `cahiers-minimal` (Default)
+   Design 3 — "Mobile-First Literary Medical Archive"
+   Zero pills, zero offset shadows, 1px architectural hairlines, bone paper (#FBF9F5), charcoal ink (#18181B)
+   ========================================================================== */
+@plugin "daisyui/theme" {
+  name: "cahiers-minimal";
+  default: true;
+  prefersdark: false;
+  color-scheme: light;
+
+  /* Surfaces */
+  --color-base-100: #FBF9F5;        /* Bone Archival Paper */
+  --color-base-200: #F3EFEA;        /* Subtle Warm Stone */
+  --color-base-300: #E4DFD7;        /* 1px Architectural Hairline */
+  --color-base-content: #18181B;    /* Deep Charcoal Ink */
+
+  /* Brand Accents */
+  --color-primary: #18181B;         /* Minimalist Ink Primary CTA */
+  --color-primary-content: #FBF9F5;
+
+  --color-secondary: #F5E600;       /* Refined Heritage Yellow Masthead Fill */
+  --color-secondary-content: #18181B;
+
+  --color-accent: #52525B;          /* Muted Zinc Editorial Accent */
+  --color-accent-content: #FBF9F5;
+
+  --color-neutral: #27272A;         /* Restrained Charcoal Footer */
+  --color-neutral-content: #FBF9F5;
+
+  /* Semantic States */
+  --color-info: #2563EB;
+  --color-info-content: #FFFFFF;
+  --color-success: #16A34A;
+  --color-success-content: #FFFFFF;
+  --color-warning: #D97706;
+  --color-warning-content: #FFFFFF;
+  --color-error: #DC2626;
+  --color-error-content: #FFFFFF;
+
+  /* Strict Literary Architecture: 0px radius (no pills) & flat depth */
+  --radius-selector: 0rem;
+  --radius-field: 0rem;
+  --radius-box: 0rem;
+  --border: 1px;
+  --depth: 0;
+  --noise: 0;
+}
+
+/* ==========================================================================
+   CUSTOM UTILITY CLASSES FOR "LES CAHIERS DU PRATICIEN"
+   ========================================================================== */
+@layer components {
+  /* Ligne 1 & 2: "LES CAHIERS DU PRATICIEN" */
+  .cahiers-masthead-title {
+    font-family: var(--font-masthead);
+    text-transform: uppercase;
+    line-height: 0.92;
+    letter-spacing: 0.01em;
+    color: var(--color-cahiers-yellow);
+  }
+
+  /* Style A: Classic Vintage Print (Yellow on Black with deep shadow) */
+  [data-theme="cahiers-swiss"] .cahiers-masthead-title {
+    color: #FAFB00;
+    -webkit-text-stroke: 1.5px #000000;
+    text-shadow: 3px 3px 0px #000000;
+  }
+
+  /* Style B: 3D Extruded Retro Masthead on Light Background */
+  [data-theme="cahiers-daylight"] .cahiers-masthead-title {
+    color: #FAFB00;
+    -webkit-text-stroke: 2px #132A32;
+    text-shadow:
+      2px 2px 0px #132A32,
+      4px 4px 0px #0F4C5C;
+  }
+
+  /* Style C: Subtle Architectural Outlined Masthead for Mobile-First Minimal */
+  [data-theme="cahiers-minimal"] .cahiers-masthead-title {
+    color: #F5E600;
+    -webkit-text-stroke: 1.5px #18181B;
+    text-shadow: 1.5px 1.5px 0px #18181B;
+  }
+
+  /* Ligne 3: "revue algérienne de médecine pratique" */
+  .cahiers-masthead-subtitle {
+    font-family: var(--font-subtitle);
+    font-weight: 900;
+    text-transform: lowercase;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+
+  /* Subtle 6px Mobile-First Fade Animation (from Theme 3) */
+  .animate-editorial-fade {
+    animation: editorialFade 380ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  /* A4 Journal Cover Aspect Ratio + Subtle Spine Crease */
+  .journal-cover-a4 {
+    aspect-ratio: 1 / 1.414;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .journal-cover-a4::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      rgba(0, 0, 0, 0.18) 0%,
+      rgba(255, 255, 255, 0.12) 4%,
+      rgba(0, 0, 0, 0.04) 7%,
+      transparent 14%
+    );
+    pointer-events: none;
+  }
+
+  /* 3D Magazine Cover Stack Effect for Hero */
+  .magazine-3d-wrapper {
+    perspective: 1200px;
+  }
+
+  .magazine-3d-cover {
+    transform: rotateY(-13deg) rotateX(4deg);
+    transform-style: preserve-3d;
+    transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.45s ease;
+    box-shadow: 
+      -15px 22px 35px rgba(0, 0, 0, 0.65),
+      4px 1px 0px #e5e5e0,
+      5px 1px 0px #1a1a1a,
+      8px 2px 0px #dcdcd6,
+      9px 2px 0px #1a1a1a,
+      12px 3px 0px #d2d2cc,
+      13px 3px 0px #1a1a1a,
+      16px 4px 0px #c8c8c2,
+      17px 4px 0px rgba(0, 0, 0, 0.7);
+  }
+
+  .magazine-3d-wrapper:hover .magazine-3d-cover {
+    transform: rotateY(-3deg) rotateX(1deg) translateY(-8px);
+    box-shadow: 
+      -20px 30px 45px rgba(250, 251, 0, 0.16),
+      4px 1px 0px #e5e5e0,
+      8px 2px 0px #dcdcd6,
+      12px 3px 0px #d2d2cc,
+      16px 4px 0px #c8c8c2;
+  }
+
+  /* Daylight Floating 3D Cover */
+  .magazine-daylight-cover {
+    transform: rotateY(-8deg) rotateX(2deg);
+    transform-style: preserve-3d;
+    transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.45s ease;
+    box-shadow: 
+      -12px 20px 30px rgba(15, 76, 92, 0.2),
+      0 0 25px rgba(250, 251, 0, 0.25),
+      4px 1px 0px #e8e4db,
+      8px 2px 0px #ded9ce;
+  }
+
+  .magazine-3d-wrapper:hover .magazine-daylight-cover {
+    transform: rotateY(-2deg) rotateX(0deg) translateY(-8px);
+    box-shadow: 
+      -18px 28px 40px rgba(15, 76, 92, 0.25),
+      0 0 35px rgba(250, 251, 0, 0.35),
+      4px 1px 0px #e8e4db,
+      8px 2px 0px #ded9ce;
+  }
+
+  /* Swiss Archival Card Hover */
+  .journal-card-cover {
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .journal-card:hover .journal-card-cover {
+    transform: translate(-4px, -4px);
+    box-shadow: 
+      3px 3px 0px #EAE6DF,
+      4px 4px 0px #0A0A0A,
+      8px 8px 0px #0A0A0A;
+  }
+
+  /* Archival Paper Texture */
+  .archival-paper-grid {
+    background-image: radial-gradient(rgba(10, 10, 10, 0.045) 1px, transparent 0);
+    background-size: 24px 24px;
+  }
+
+  /* Sunlit Ambient Background for Theme 2 */
+  .daylight-ambient-bg {
+    background-color: #FAF7F0;
+    background-image: 
+      radial-gradient(circle at 18% 22%, rgba(255, 243, 176, 0.75) 0%, transparent 45%),
+      radial-gradient(circle at 85% 30%, rgba(15, 76, 92, 0.09) 0%, transparent 48%),
+      radial-gradient(circle at 60% 85%, rgba(250, 251, 0, 0.18) 0%, transparent 40%),
+      linear-gradient(to right, rgba(15, 76, 92, 0.04) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(15, 76, 92, 0.04) 1px, transparent 1px);
+    background-size: 100% 100%, 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+  }
+}
+
+@keyframes editorialFade {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Respect reduced motion on mobile devices */
+@media (prefers-reduced-motion: reduce) {
+  .animate-editorial-fade {
+    animation: none !important;
+    transform: none !important;
+  }
+}
+
+/* Anti-badge Netlify : garantit qu'aucun badge ni tiroir d'aperçu n'apparaît */
+[data-netlify-badge],
+.netlify-badge,
+#netlify-badge,
+netlify-drawer,
+[data-netlify-deploy-id],
+iframe[title="Netlify Drawer"] {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  opacity: 0 !important;
+  width: 0 !important;
+  height: 0 !important;
+}
