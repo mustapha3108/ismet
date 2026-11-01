@@ -6,7 +6,7 @@ import { books } from '../data/books.js';
 const defaultBook = books[0];
 const defaultCover = defaultBook 
   ? (typeof defaultBook.coverImage === 'string' ? defaultBook.coverImage : defaultBook.coverImage.src) 
-  : "/covers/cover7.webp";
+  : "/covers/Untitled-5.webp";
 ---
 
 <!doctype html>
@@ -27,9 +27,20 @@ const defaultCover = defaultBook
   </head>
   <body class="h-full w-full bg-neutral-950 overflow-hidden m-0 p-0 text-neutral-100">
     <PdfReader 
-      pdfUrl={defaultBook?.pdfUrl || "/pdf7.pdf"} 
+      pdfUrl={defaultBook?.pdfUrl || "/Untitled-5.pdf"} 
       bookTitle={defaultBook ? `${defaultBook.edition} — ${defaultBook.title}` : "Revue médicale"} 
       coverImage={defaultCover}
     />
+    <script is:inline>
+      (() => {
+        const killNetlify = () => {
+          document.querySelectorAll('iframe[src*="netlify"], iframe[title*="Netlify"], iframe[title*="netlify"], iframe[id*="netlify"], #netlify-badge, .netlify-badge, netlify-drawer, [data-netlify-badge], [data-netlify-deploy-id]').forEach(el => el.remove());
+        };
+        killNetlify();
+        if (typeof MutationObserver !== 'undefined') {
+          new MutationObserver(killNetlify).observe(document.documentElement, { childList: true, subtree: true });
+        }
+      })();
+    </script>
   </body>
 </html>

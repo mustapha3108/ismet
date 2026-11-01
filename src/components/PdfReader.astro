@@ -9,11 +9,11 @@ interface Props {
 }
 
 const defaultBook = books[0] || {
-  id: "7",
-  edition: "Numéro 07",
+  id: "6",
+  edition: "Numéro 06",
   title: "Revue médicale",
-  pdfUrl: "/pdf7.pdf",
-  coverImage: "/covers/cover7.webp"
+  pdfUrl: "/Untitled-5.pdf",
+  coverImage: "/covers/Untitled-5.webp"
 };
 
 const { 
@@ -25,7 +25,7 @@ const {
 
 const coverUrl = typeof coverImage === 'string' 
   ? coverImage 
-  : (coverImage?.src || "/covers/cover7.webp");
+  : (coverImage?.src || "/covers/Untitled-5.webp");
 ---
 
 <div 
@@ -306,9 +306,9 @@ const coverUrl = typeof coverImage === 'string'
     const wrapper = document.getElementById('reader-wrapper');
     if (!wrapper) return;
 
-    const defaultPdfUrl = wrapper.dataset.defaultPdf || '/pdf7.pdf';
+    const defaultPdfUrl = wrapper.dataset.defaultPdf || '/Untitled-5.pdf';
     const defaultTitle = wrapper.dataset.defaultTitle || 'Revue médicale';
-    const defaultCover = wrapper.dataset.defaultCover || '/covers/cover7.webp';
+    const defaultCover = wrapper.dataset.defaultCover || '/covers/Untitled-5.webp';
 
     let allBooks: any[] = [];
     try {
@@ -346,7 +346,7 @@ const coverUrl = typeof coverImage === 'string'
       const queryPdf = urlParams.get('pdf');
 
       if (queryId && Array.isArray(allBooks)) {
-        const found = allBooks.find((b: any) => String(b.id) === String(queryId));
+        const found = allBooks.find((b: any) => String(b.id) === String(queryId) || (Array.isArray(b.legacyIds) && b.legacyIds.includes(String(queryId))));
         if (found) {
           targetPdfUrl = found.pdfUrl;
           targetTitle = `${found.edition} — ${found.title}`;
@@ -362,8 +362,14 @@ const coverUrl = typeof coverImage === 'string'
 
       if (titleEl) titleEl.textContent = targetTitle;
       document.title = `${targetTitle} — Les Cahiers du Praticien`;
-      if (downloadLink) downloadLink.href = targetPdfUrl;
-      if (errorDownloadLink) errorDownloadLink.href = targetPdfUrl;
+      if (downloadLink) {
+        downloadLink.href = targetPdfUrl;
+        downloadLink.setAttribute('download', `${targetTitle}.pdf`);
+      }
+      if (errorDownloadLink) {
+        errorDownloadLink.href = targetPdfUrl;
+        errorDownloadLink.setAttribute('download', `${targetTitle}.pdf`);
+      }
 
       // Affichage instantané de la couverture sélectionnée
       if (previewCoverImg && targetCoverImage) {

@@ -352,17 +352,28 @@
   }
 }
 
-/* Anti-badge Netlify : garantit qu'aucun badge ni tiroir d'aperçu n'apparaît */
+/* Anti-badge Netlify : élimine tout badge, tiroir ou iframe injecté */
 [data-netlify-badge],
 .netlify-badge,
 #netlify-badge,
 netlify-drawer,
 [data-netlify-deploy-id],
-iframe[title="Netlify Drawer"] {
+iframe[src*="netlify"],
+iframe[title*="Netlify"],
+iframe[title*="netlify"],
+iframe[id*="netlify"],
+div[id*="netlify"],
+div[class*="netlify-badge"] {
   display: none !important;
   visibility: hidden !important;
   pointer-events: none !important;
   opacity: 0 !important;
   width: 0 !important;
   height: 0 !important;
+  max-width: 0 !important;
+  max-height: 0 !important;
+  position: absolute !important;
+  left: -9999px !important;
+  top: -9999px !important;
+  z-index: -9999 !important;
 }
